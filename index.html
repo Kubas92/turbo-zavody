@@ -105,6 +105,7 @@
       <div class="card p1"><div class="who">🏎️ Hráč 1 – červený</div><div class="dev" id="dev0"></div></div>
       <div class="card p2"><div class="who">🏎️ Hráč 2 – modrý</div><div class="dev" id="dev1"></div></div>
     </div>
+    <div class="help" id="padsInfo" style="margin:-0.5vmin 0 1.5vmin"></div>
     <div class="row" id="rowTrack"><div class="tracks" id="trackPick"></div></div>
     <div class="row laps-pick" id="rowLaps">Počet kol: ◀ <span id="lapsVal">3</span> ▶</div>
     <div class="go">Zmáčkni A (nebo Enter) a jedeme!</div>
@@ -1166,16 +1167,37 @@ function toggleFS() {
   else document.documentElement.requestFullscreen?.().catch(() => {});
 }
 
+// ovladač se hráči přiřadí až stiskem tlačítka – zařízení, na kterých nikdo nic nemačká, se ignorují
+const slots = [null, null];
+let allPads = [];
+function padState(g) {
+  const cur = {};
+  if (g) {
+    g.buttons.forEach((b, k) => { cur[k] = b.pressed; });
+    const ax = g.axes[0] || 0, ay = g.axes[1] || 0;
+    cur.L = ax < -0.6; cur.R = ax > 0.6; cur.U = ay < -0.6; cur.D = ay > 0.6;
+  }
+  return cur;
+}
 function pollPads() {
-  const all = navigator.getGamepads ? [...navigator.getGamepads()].filter(g => g && g.connected) : [];
-  pads = [all[0] || null, all[1] || null];
+  allPads = navigator.getGamepads ? [...navigator.getGamepads()].filter(g => g && g.connected) : [];
   for (let i = 0; i < 2; i++) {
-    const g = pads[i], cur = {};
-    if (g) {
-      g.buttons.forEach((b, k) => { cur[k] = b.pressed; });
-      const ax = g.axes[0] || 0, ay = g.axes[1] || 0;
-      cur.L = ax < -0.6; cur.R = ax > 0.6; cur.U = ay < -0.6; cur.D = ay > 0.6;
-    }
+    if (slots[i] !== null && !allPads.some(g => g.index === slots[i])) slots[i] = null;
+  }
+  for (const g of allPads) {
+    const free = slots.indexOf(null);
+    if (free < 0) break;
+    if (slots.includes(g.index) || !g.buttons.some(b => b.pressed)) continue;
+    slots[free] = g.index;
+    // stisk, kterým se hráč připojil, nemá zároveň spustit akci
+    prevBtn[free] = padState(g);
+    initAudio();
+    beep(free ? 660 : 520, 0.15);
+    if (state !== 'menu') showMsg(players[free], '🎮 OVLADAČ PŘIPOJEN', 1.2, 'small');
+  }
+  pads = slots.map(ix => (ix === null ? null : allPads.find(g => g.index === ix) || null));
+  for (let i = 0; i < 2; i++) {
+    const g = pads[i], cur = padState(g);
     const pr = prevBtn[i];
     const edge = k => cur[k] && !pr[k];
     if (edge(0)) actions.push({ t: 'confirm', p: i });
@@ -1541,9 +1563,17 @@ function updateMenu() {
     const g = pads[i];
     const html = g
       ? `🎮 <b>Ovladač připojen</b><br><small>${g.id.replace(/\(.*?\)/g, '').slice(0, 40)}</small>`
-      : `⌨️ Klávesnice: ${i === 0 ? 'W A S D' : 'šipky'}<br><small>Ovladač nevidím – zmáčkni na něm libovolné tlačítko.</small>`;
+      : `⌨️ Klávesnice: ${i === 0 ? 'W A S D' : 'šipky'}<br><small>Na ovladači zmáčkni <b>A</b> – připojí se jako ${NAMES[i].toLowerCase()}.</small>`;
     if (devCache[i] !== html) { $('dev' + i).innerHTML = html; devCache[i] = html; }
   }
+  const list = allPads.length
+    ? allPads.map(g => {
+      const who = slots.indexOf(g.index);
+      return `#${g.index} ${g.id.replace(/\(.*?\)/g, '').trim().slice(0, 34)}${g.mapping === 'standard' ? '' : ' (nestandardní)'} → <b>${who < 0 ? 'nepřipojen' : NAMES[who]}</b>`;
+    }).join(' · ')
+    : 'žádný – připoj ovladač a zmáčkni na něm tlačítko';
+  const info = `Prohlížeč vidí ovladače: ${list}`;
+  if (devCache[2] !== info) { $('padsInfo').innerHTML = info; devCache[2] = info; }
 }
 
 function setState(s) {
