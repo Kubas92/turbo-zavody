@@ -38,33 +38,44 @@
 
   #minimap { position: fixed; z-index: 4; width: 20vmin; height: 20vmin; pointer-events: none; }
 
-  .overlay { position: fixed; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center;
+  .overlay { position: fixed; inset: 0; z-index: 10; display: flex; align-items: flex-start; justify-content: center;
     background: radial-gradient(ellipse at center, rgba(10,20,40,.62), rgba(0,0,0,.88)); padding: 16px; overflow-y: auto; }
   .overlay.hidden { display: none; }
-  .panel { text-align: center; max-width: 1200px; width: 100%; }
-  h1 { font-size: 10vmin; margin: 0 0 1.5vmin; letter-spacing: .02em; line-height: 1;
+  .panel { text-align: center; max-width: 1200px; width: 100%; margin: auto 0; }
+  h1 { font-size: 8vmin; margin: 0 0 1vmin; letter-spacing: .02em; line-height: 1;
     background: linear-gradient(180deg, #fff176, #ff9800); -webkit-background-clip: text; background-clip: text; color: transparent;
     filter: drop-shadow(0 6px 0 rgba(0,0,0,.5)); }
   h2 { font-size: 7vmin; margin: 0 0 2vmin; }
-  .cards { display: flex; gap: 3vmin; justify-content: center; margin: 1.5vmin 0 2vmin; flex-wrap: wrap; }
-  .card { flex: 1 1 280px; max-width: 460px; border-radius: 2vmin; padding: 1.8vmin; background: rgba(255,255,255,.07); border: .5vmin solid; }
+  .cards { display: flex; gap: 3vmin; justify-content: center; flex-wrap: wrap; }
+  .card { flex: 1 1 280px; max-width: 520px; border-radius: 2vmin; padding: 1.4vmin; background: rgba(255,255,255,.07); border: .5vmin solid; }
   .card.p1 { border-color: var(--p1); } .card.p2 { border-color: var(--p2); }
   .card .who { font-size: 4vmin; }
   .card.p1 .who { color: #ff8a80; } .card.p2 .who { color: #82b1ff; }
-  .card .dev { font-family: system-ui, sans-serif; font-size: 2.2vmin; margin-top: .8vmin; opacity: .9; min-height: 2.6em; }
+  .card .carsel { display: flex; align-items: center; justify-content: center; gap: 1vmin; margin-top: .6vmin; }
+  .card .arr { font-size: 4.5vmin; cursor: pointer; opacity: .8; padding: 0 1vmin; }
+  .card canvas.prev { width: min(100%, 30vmin); aspect-ratio: 400 / 230; display: block; }
+  .card .carname { font-size: 3.6vmin; color: var(--gold); }
+  .card .carname small { font-size: .5em; color: #fff; opacity: .6; }
+  .stats { display: grid; grid-template-columns: auto auto auto auto; gap: .5vmin 1.2vmin; justify-content: center; align-items: center;
+    font-family: system-ui, sans-serif; font-size: 1.8vmin; margin-top: .8vmin; }
+  .stats span { text-align: right; opacity: .85; }
+  .stats i { display: flex; gap: .35vmin; }
+  .stats b, .stats u { width: 1.8vmin; height: 1.1vmin; border-radius: .3vmin; background: var(--gold); }
+  .stats u { background: rgba(255,255,255,.18); }
+  .card .dev { font-family: system-ui, sans-serif; font-size: 1.9vmin; margin-top: .8vmin; opacity: .9; min-height: 2.4em; }
   .card .dev b { color: #b9f6ca; }
-  .row { border: .4vmin dashed transparent; border-radius: 2vmin; padding: 1.2vmin; margin: 0 auto 1.5vmin; max-width: 1000px; }
+  .row { border: .4vmin dashed transparent; border-radius: 2vmin; padding: 1vmin; margin: 0 auto 1vmin; max-width: 1100px; }
   .row.focus { border-color: rgba(255,255,255,.45); background: rgba(255,255,255,.04); }
   .tracks { display: flex; gap: 2vmin; justify-content: center; flex-wrap: wrap; }
-  .tcard { flex: 1 1 200px; max-width: 300px; padding: 1.4vmin; border-radius: 1.6vmin; background: rgba(255,255,255,.07);
+  .tcard { flex: 1 1 160px; max-width: 260px; padding: 1vmin; border-radius: 1.6vmin; background: rgba(255,255,255,.07);
     border: .5vmin solid transparent; cursor: pointer; font-size: 3vmin; transition: transform .15s; }
-  .tcard .em { font-size: 7vmin; line-height: 1.1; display: block; }
+  .tcard .em { font-size: 5.5vmin; line-height: 1.1; display: block; }
   .tcard.sel { border-color: var(--gold); background: rgba(255,196,0,.16); transform: scale(1.06); }
   .laps-pick { font-size: 4.2vmin; }
   .laps-pick span { display: inline-block; min-width: 2.2em; color: var(--gold); }
   .go { font-size: 4vmin; color: var(--gold); animation: pulse 1.1s ease-in-out infinite; margin-top: 1vmin; }
   @keyframes pulse { 50% { opacity: .45; } }
-  .help { font-family: system-ui, sans-serif; font-size: 2vmin; opacity: .75; margin-top: 2vmin; line-height: 1.6; }
+  .help { font-family: system-ui, sans-serif; font-size: 1.8vmin; opacity: .75; margin-top: 1.2vmin; line-height: 1.55; }
   .help kbd { font-family: inherit; background: rgba(255,255,255,.15); border-radius: 4px; padding: 0 .5em; }
   button.fs { font: inherit; font-size: 2.4vmin; margin-top: 1.5vmin; padding: 1vmin 2.4vmin; border-radius: 1vmin; border: 0;
     background: rgba(255,255,255,.15); color: #fff; cursor: pointer; }
@@ -101,18 +112,22 @@
 <div class="overlay" id="menu">
   <div class="panel">
     <h1>TURBO ZÁVODY</h1>
-    <div class="cards">
-      <div class="card p1"><div class="who">🏎️ Hráč 1 – červený</div><div class="dev" id="dev0"></div></div>
-      <div class="card p2"><div class="who">🏎️ Hráč 2 – modrý</div><div class="dev" id="dev1"></div></div>
-    </div>
-    <div class="help" id="padsInfo" style="margin:-0.5vmin 0 1.5vmin"></div>
+    <div class="row" id="rowCars"><div class="cards">
+      <div class="card p1"><div class="who">🎮 Hráč 1</div>
+        <div class="carsel"><span class="arr" data-p="0" data-d="-1">◀</span><canvas class="prev" id="prev0" width="400" height="230"></canvas><span class="arr" data-p="0" data-d="1">▶</span></div>
+        <div class="carname" id="carName0"></div><div class="stats" id="stats0"></div><div class="dev" id="dev0"></div></div>
+      <div class="card p2"><div class="who">🎮 Hráč 2</div>
+        <div class="carsel"><span class="arr" data-p="1" data-d="-1">◀</span><canvas class="prev" id="prev1" width="400" height="230"></canvas><span class="arr" data-p="1" data-d="1">▶</span></div>
+        <div class="carname" id="carName1"></div><div class="stats" id="stats1"></div><div class="dev" id="dev1"></div></div>
+    </div></div>
+    <div class="help" id="padsInfo" style="margin:0 0 1vmin"></div>
     <div class="row" id="rowTrack"><div class="tracks" id="trackPick"></div></div>
     <div class="row laps-pick" id="rowLaps">Počet kol: ◀ <span id="lapsVal">3</span> ▶</div>
     <div class="go">Zmáčkni A (nebo Enter) a jedeme!</div>
     <div class="help">
-      Menu: <b>nahoru/dolů</b> = výběr řádku · <b>doleva/doprava</b> = změna trati / počtu kol<br>
-      🎮 <b>RT</b> nebo <b>A</b> = plyn · <b>LT</b> nebo <b>B</b> = brzda / couvání · <b>levá páčka</b> = zatáčení · <b>Y</b> = vrátit auto na trať · <b>Start</b> = pauza<br>
-      ⌨️ Hráč 1: <kbd>W A S D</kbd>, <kbd>R</kbd> = na trať · Hráč 2: <kbd>šipky</kbd>, <kbd>.</kbd> = na trať · <kbd>P</kbd>/<kbd>Esc</kbd> = pauza<br>
+      Menu: <b>nahoru/dolů</b> = výběr řádku · <b>doleva/doprava</b> = auto (každý své) / trať / počet kol · <b>LB/RB</b> = změna auta kdykoli<br>
+      🎮 <b>RT</b> nebo <b>A</b> = plyn · <b>LT</b> nebo <b>B</b> = brzda / couvání · <b>levá páčka</b> = zatáčení · <b>Y</b> = vrátit auto na trať · <b>LB/RB</b> = troubení · <b>Start</b> = pauza<br>
+      ⌨️ Hráč 1: <kbd>W A S D</kbd>, <kbd>R</kbd> = na trať, <kbd>Q</kbd> = troubení · Hráč 2: <kbd>šipky</kbd>, <kbd>.</kbd> = na trať, pravý <kbd>Shift</kbd> = troubení · <kbd>P</kbd>/<kbd>Esc</kbd> = pauza<br>
       <kbd>F</kbd> = celá obrazovka · <kbd>V</kbd> = rozdělení nahoře/dole ↔ vedle sebe · <kbd>M</kbd> = zvuk zap/vyp · žluté šipky na silnici = TURBO! 🔥
     </div>
     <button class="fs" id="fsBtn">⛶ Celá obrazovka</button>
@@ -159,7 +174,7 @@ const store = {
 
 let lapIdx = store.get('laps', 2);
 let trackIdx = store.get('track', 0);
-let menuRow = 0;
+let menuRow = 0;   // 0 = auta, 1 = trať, 2 = kola
 let splitMode = 'h';
 let state = 'menu';
 let muted = false;
@@ -211,6 +226,7 @@ let world = null;
 let animators = [];
 let boostTex = null;
 let theme = null;
+let keepOut = [];   // kruhy, kam se nesází stromy (jezero)
 const headingAt = k => Math.atan2(tan[k].x, tan[k].z);
 
 function trackDist(x, z) {
@@ -220,6 +236,7 @@ function trackDist(x, z) {
 }
 function randomSpot(minD, maxD, margin = 300) {
   const x = rand(bbox.minX - margin, bbox.maxX + margin), z = rand(bbox.minZ - margin, bbox.maxZ + margin);
+  if (keepOut.some(c => (x - c.x) ** 2 + (z - c.z) ** 2 < c.r * c.r)) return null;
   const d = trackDist(x, z);
   return d >= minD && d <= maxD ? { x, z, d } : null;
 }
@@ -544,40 +561,7 @@ function decorDino() {
   });
   mountains(0x6b8f5e, null, 22, 900);
 
-  // sopka
-  {
-    let spot = null;
-    for (let i = 0; i < 500 && !spot; i++) spot = randomSpot(280, 420, 320);
-    spot = spot || { x: bbox.maxX + 350, z: bbox.minZ };
-    const v = new THREE.Group(); v.position.set(spot.x, 0, spot.z); world.add(v);
-    mesh(new THREE.CylinderGeometry(26, 140, 150, 12, 1, true), lambert(0x5d4037, { flatShading: true, side: THREE.DoubleSide }), 0, 75, 0, v);
-    const lava = mesh(new THREE.CircleGeometry(26, 16), new THREE.MeshBasicMaterial({ color: 0xff6d00 }), 0, 148, 0, v);
-    lava.rotation.x = -Math.PI / 2;
-    for (let i = 0; i < 5; i++) {
-      const a = i / 5 * TAU + 0.3;
-      const flow = mesh(new THREE.BoxGeometry(4, 70, 0.5), new THREE.MeshBasicMaterial({ color: 0xff3d00 }), Math.sin(a) * 58, 110, Math.cos(a) * 58, v);
-      flow.rotation.y = a;
-      flow.rotation.x = 0.73;
-      flow.scale.y = 0.9 + Math.random() * 0.4;
-    }
-    const smokeMat = () => lambert(0x6d6d6d, { transparent: true, opacity: 0.6, depthWrite: false });
-    const puffs = [];
-    for (let i = 0; i < 14; i++) {
-      const p = mesh(sphere(10, 10, 8), smokeMat(), 0, 150, 0, v);
-      p.userData.t = i / 14;
-      puffs.push(p);
-    }
-    animators.push((t, dt) => {
-      for (const p of puffs) {
-        p.userData.t = (p.userData.t + dt * 0.06) % 1;
-        const u = p.userData.t;
-        p.position.set(Math.sin(u * 5 + p.id) * 15 * u + u * 60, 150 + u * 180, Math.cos(u * 3 + p.id) * 15 * u);
-        p.scale.setScalar(0.6 + u * 2.4);
-        p.material.opacity = 0.65 * (1 - u);
-      }
-      lava.material.color.setHSL(0.05 + Math.sin(t * 3) * 0.015, 1, 0.5);
-    });
-  }
+  volcano();
 
   // brachiosaurus nad tratí – jede se mu pod břichem!
   makeBrachioArch(Math.round(0.45 * N));
@@ -598,7 +582,7 @@ function decorDino() {
       yaw += (want - yaw) * Math.min(1, dt * 3);
       rex.head.rotation.y = yaw;
       cool -= dt;
-      if (near.dist < 45 && cool <= 0) { roarT = 1.4; cool = 6; if (state === 'race') roar(); }
+      if (near.dist < 45 && cool <= 0) { roarT = 1.4; cool = 6; if (state === 'race') roar(1 - near.dist / 90); }
       roarT = Math.max(0, roarT - dt);
       rex.jaw.rotation.x = roarT > 0 ? Math.sin(Math.min(1, roarT / 1.4) * Math.PI) * 0.7 : 0.05 + Math.sin(t * 2) * 0.05;
       rex.head.rotation.x = roarT > 0 ? -0.3 * Math.sin(roarT / 1.4 * Math.PI) : 0;
@@ -684,6 +668,661 @@ function decorDino() {
       g.rotation.z = -Math.sign(sp) * 0.25;
       const flap = Math.sin(t * 3 + ph) * 0.45;
       wings[0].rotation.z = flap; wings[1].rotation.z = -flap;
+    });
+  }
+}
+
+// ---------- Pravěké údolí: realističtější dinosauři ----------
+// těla jsou hladké „trubky“ s eliptickým průřezem natažené podél páteře; barva ve vrcholech (tmavý hřbet, světlé břicho, pruhy)
+const scaleBump = canvasTex(128, 128, (x, w, h) => {
+  x.fillStyle = '#808080'; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < 1400; i++) {
+    const v = (70 + Math.random() * 130) | 0;
+    x.fillStyle = `rgb(${v},${v},${v})`;
+    x.beginPath(); x.arc(Math.random() * w, Math.random() * h, 1.2 + Math.random() * 2.2, 0, TAU); x.fill();
+  }
+});
+scaleBump.colorSpace = THREE.NoColorSpace;
+let dinoMat = null;
+
+// ctrl = [[x, y, z, poloviční šířka, poloviční výška], …] od konce ocasu k čenichu
+function loft(ctrl, { seg = 40, ring = 14, top = 0x5b4a36, belly = 0xc8b48a, stripe = null, stripes = 0, mottle = 0.12 } = {}) {
+  const V = THREE.Vector3;
+  const path = new THREE.CatmullRomCurve3(ctrl.map(c => new V(c[0], c[1], c[2])));
+  const rad = new THREE.CatmullRomCurve3(ctrl.map(c => new V(c[3], c[4], 0)));
+  const cT = new THREE.Color(top), cB = new THREE.Color(belly), cS = new THREE.Color(stripe ?? top), c = new THREE.Color();
+  const pos = [], col = [], uv = [], us = [], idx = [];
+  const s = new V(), n = new V();
+  for (let i = 0; i <= seg; i++) {
+    const u = i / seg, p = path.getPoint(u), r = rad.getPoint(u), t = path.getTangent(u);
+    s.set(t.z, 0, -t.x);
+    if (s.lengthSq() < 1e-6) s.set(1, 0, 0);
+    s.normalize();
+    n.crossVectors(t, s).normalize();
+    for (let j = 0; j < ring; j++) {
+      const a = j / ring * TAU - Math.PI / 2, ca = Math.cos(a), sa = Math.sin(a);
+      pos.push(p.x + s.x * ca * r.x + n.x * sa * r.y, p.y + s.y * ca * r.x + n.y * sa * r.y, p.z + s.z * ca * r.x + n.z * sa * r.y);
+      c.copy(cB).lerp(cT, THREE.MathUtils.smoothstep(sa, -0.45, 0.35));
+      if (stripes && sa > -0.2 && Math.sin(u * stripes * TAU + ca * 1.2) > 0.45) c.lerp(cS, 0.75 * Math.min(1, (sa + 0.2) * 2));
+      c.multiplyScalar(1 + (Math.random() - 0.5) * mottle);
+      col.push(c.r, c.g, c.b);
+      uv.push(u * seg / 5, j / ring * 3);
+      us.push(u);
+    }
+  }
+  for (let i = 0; i < seg; i++) for (let j = 0; j < ring; j++) {
+    const a = i * ring + j, b = i * ring + (j + 1) % ring;
+    idx.push(a, b, a + ring, b, b + ring, a + ring);
+  }
+  // uzavřít konce
+  for (const [i, flip] of [[0, true], [seg, false]]) {
+    const p = path.getPoint(i / seg), ci = pos.length / 3, k = i * ring * 3;
+    pos.push(p.x, p.y, p.z); col.push(col[k], col[k + 1], col[k + 2]); uv.push(0, 0); us.push(i / seg);
+    for (let j = 0; j < ring; j++) {
+      const a = i * ring + j, b = i * ring + (j + 1) % ring;
+      idx.push(...(flip ? [ci, b, a] : [ci, a, b]));
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  g.userData = { u: us, base: Float32Array.from(pos), path, rad };
+  return g;
+}
+const part = (ctrl, o, parent, x = 0, y = 0, z = 0) => mesh(loft(ctrl, o), dinoMat, x, y, z, parent);
+
+// vlnění ocasu deformací vrcholů (u < uEnd je ocas)
+function tailSway(m, uEnd, amp) {
+  const g = m.geometry, { base, u } = g.userData, pa = g.attributes.position.array;
+  return (t, k = 1) => {
+    for (let i = 0; i < u.length; i++) {
+      if (u[i] >= uEnd) continue;
+      const f = (uEnd - u[i]) / uEnd;
+      pa[i * 3] = base[i * 3] + Math.sin(t - u[i] * 5) * amp * k * f * f;
+    }
+    g.attributes.position.needsUpdate = true;
+  };
+}
+function dinoEyes(parent, x, y, z, r) {
+  const m = new THREE.MeshStandardMaterial({ color: 0x1a120a, roughness: 0.15 });
+  for (const s of [-1, 1]) mesh(sphere(r, 10, 8), m, s * x, y, z, parent);
+}
+const ivory = () => new THREE.MeshStandardMaterial({ color: 0xe8dcc0, roughness: 0.6 });
+// nohy bez světlého břicha; chodidla a prsty jednou tmavou barvou
+const legOpts = (o, seg = 10) => ({ ...o, belly: new THREE.Color(o.top).lerp(new THREE.Color(o.belly), 0.35).getHex(), stripes: 0, seg, ring: 10 });
+const footMat = o => new THREE.MeshStandardMaterial({ color: new THREE.Color(o.top).multiplyScalar(0.6), roughness: 0.9, bumpMap: scaleBump });
+
+// sloupovitá noha o dvou článcích (čtvernožci)
+function realLeg(parent, x, y, z, len, w, o) {
+  const hip = new THREE.Group(); hip.position.set(x, y, z); parent.add(hip);
+  const a = len / 2, lo = legOpts(o);
+  part([[0, 0.6, 0, w * 0.8, w * 0.85], [0, -a * 0.35, 0.05, w, w * 1.05], [0, -a, 0.08, w * 0.72, w * 0.76]], lo, hip);
+  const knee = new THREE.Group(); knee.position.set(0, -a, 0.08); hip.add(knee);
+  part([[0, 0.1, 0, w * 0.72, w * 0.76], [0, -a * 0.5, 0, w * 0.64, w * 0.66], [0, -a + 0.2, 0, w * 0.62, w * 0.62]], lo, knee);
+  mesh(new THREE.CylinderGeometry(w * 0.72, w * 0.86, 0.35, 10), footMat(o), 0, -a + 0.18, 0.06, knee);
+  return { hip, knee };
+}
+function quadStride(legs, ph, amp) {
+  [0, Math.PI, Math.PI * 0.5, Math.PI * 1.5].forEach((off, i) => {
+    const L = legs[i], a = ph + off;
+    L.hip.rotation.x = -Math.sin(a) * amp;
+    L.knee.rotation.x = Math.max(0, Math.cos(a)) * amp * 1.2;
+  });
+}
+
+// tyranosaurus (raptor = menší, štíhlejší, s peřím)
+function makeTheropod({ top, belly, stripe, raptor = false }) {
+  const o = { top, belly, stripe, stripes: raptor ? 10 : 6 };
+  const root = new THREE.Group(), body = new THREE.Group();
+  root.add(body);
+  const torso = part([[0, 2.5, -7.5, 0.04, 0.05], [0, 2.8, -6, 0.22, 0.28], [0, 3.25, -4, 0.48, 0.6], [0, 3.75, -2, 0.8, 0.98],
+    [0, 4.05, 0, 1.08, 1.3], [0, 3.95, 1.5, 1.2, 1.45], [0, 3.95, 2.7, 0.98, 1.25], [0, 4.25, 3.6, 0.68, 0.85]], { ...o, seg: 48 }, body);
+  const sway = tailSway(torso, 4 / 7, raptor ? 0.5 : 0.8);
+  const neck = new THREE.Group(); neck.position.set(0, 4.25, 3.3); body.add(neck);
+  if (raptor) neck.scale.set(0.75, 0.7, 1.0);
+  part([[0, 0, -0.5, 0.7, 0.85], [0, 0.35, 0.35, 0.6, 0.72], [0, 0.65, 1.05, 0.56, 0.68], [0, 0.85, 1.6, 0.58, 0.62],
+    [0, 0.8, 2.3, 0.47, 0.48], [0, 0.7, 2.9, 0.34, 0.34], [0, 0.62, 3.3, 0.2, 0.2]], { ...o, seg: 32 }, neck);
+  const jaw = new THREE.Group(); jaw.position.set(0, 0.32, 1.7); neck.add(jaw);
+  part([[0, 0, -0.1, 0.48, 0.24], [0, -0.06, 0.7, 0.4, 0.22], [0, -0.04, 1.3, 0.27, 0.16], [0, 0, 1.6, 0.14, 0.08]], { ...o, seg: 14, stripes: 0 }, jaw);
+  // vnitřek tlamy a zuby
+  mesh(new THREE.BoxGeometry(0.6, 0.05, 1.3), new THREE.MeshStandardMaterial({ color: 0x8e3a3a, roughness: 0.6 }), 0, 0.1, 0.75, jaw);
+  const tooth = new THREE.ConeGeometry(0.05, 0.22, 5), toothMat = ivory();
+  for (let i = 0; i < 7; i++) for (const s of [-1, 1]) {
+    const t = mesh(tooth, toothMat, s * (0.4 - i * 0.03), 0.3 + i * 0.02, 1.95 + i * 0.18, neck);
+    t.rotation.x = Math.PI;
+  }
+  dinoEyes(neck, 0.53, 1.12, 1.8, 0.09);
+  // malé přední končetiny
+  for (const s of [-1, 1]) {
+    const arm = new THREE.Group(); arm.position.set(s * 0.85, 3.55, 2.75); body.add(arm);
+    if (raptor) arm.scale.setScalar(2.2);
+    part([[0, 0, 0, 0.16, 0.18], [0, -0.35, 0.3, 0.12, 0.12], [0, -0.45, 0.62, 0.08, 0.08]], { ...o, seg: 8, ring: 8, stripes: 0 }, arm);
+    if (raptor) for (let i = 0; i < 5; i++) {
+      const f = mesh(new THREE.BoxGeometry(0.03, 0.08, 0.5), lambert(new THREE.Color(stripe).lerp(new THREE.Color(top), i / 5)), s * 0.1, -0.3 - i * 0.05, 0.1 + i * 0.1, arm);
+      f.rotation.x = 0.9;
+    }
+  }
+  // nohy: stehno – holeň – nárt – prsty
+  const legs = [];
+  const toe = new THREE.ConeGeometry(0.11, 0.7, 6).rotateX(Math.PI / 2).translate(0, 0, 0.3), toeMat = footMat(o), lo = legOpts(o, 12);
+  for (const s of [-1, 1]) {
+    const hip = new THREE.Group(); hip.position.set(s * 0.95, 3.85, 0.2); body.add(hip);
+    part([[0, 0.4, -0.2, 0.75, 1.05], [0, -0.55, 0.15, 0.78, 0.95], [0, -1.55, 0.45, 0.36, 0.4]], lo, hip);
+    const knee = new THREE.Group(); knee.position.set(0, -1.55, 0.45); hip.add(knee);
+    part([[0, 0.1, 0, 0.34, 0.38], [0, -0.7, -0.25, 0.27, 0.3], [0, -1.3, -0.5, 0.17, 0.19]], lo, knee);
+    const ankle = new THREE.Group(); ankle.position.set(0, -1.3, -0.5); knee.add(ankle);
+    part([[0, 0.05, 0, 0.17, 0.18], [0, -0.5, 0.15, 0.14, 0.14], [0, -0.95, 0.3, 0.12, 0.11]], lo, ankle);
+    for (const tx of [-0.2, 0, 0.2]) mesh(toe, toeMat, tx, -1.0, 0.3, ankle).rotation.y = tx * 1.2;
+    legs.push({ hip, knee, ankle });
+  }
+  if (raptor) {
+    // ocasní pera a hřebínek
+    const fm = lambert(stripe, { side: THREE.DoubleSide });
+    for (let i = 0; i < 6; i++) {
+      const f = mesh(new THREE.PlaneGeometry(0.25, 1.4), fm, 0, 2.6 + i * 0.05, -7.2 + i * 0.25, body);
+      f.rotation.set(-Math.PI / 2, 0, (i - 2.5) * 0.35);
+    }
+    for (let i = 0; i < 8; i++) mesh(new THREE.BoxGeometry(0.05, 0.4, 0.25), fm, 0, 0.85 + (i < 4 ? 0.05 : 0) - i * 0.03, -0.4 + i * 0.3, neck).rotation.x = -0.5;
+    root.scale.setScalar(0.4);
+  }
+  // krok: ph = fáze, amp = délka kroku
+  const stride = (ph, amp) => legs.forEach((L, i) => {
+    const a = ph + i * Math.PI;
+    L.hip.rotation.x = -Math.sin(a) * amp;
+    L.knee.rotation.x = 0.15 + Math.max(0, Math.cos(a)) * amp * 1.4;
+    L.ankle.rotation.x = -(L.hip.rotation.x + L.knee.rotation.x) * 0.9;
+  });
+  return { root, body, neck, jaw, legs, sway, stride };
+}
+
+function makeSauropod(o) {
+  const root = new THREE.Group(), body = new THREE.Group();
+  root.add(body);
+  const torso = part([[0, 3.2, -15, 0.08, 0.08], [0, 4.6, -11, 0.5, 0.55], [0, 6.2, -7, 1.3, 1.4], [0, 7.4, -3.5, 2.2, 2.3],
+    [0, 7.8, 0, 2.6, 2.7], [0, 8.1, 2.6, 2.3, 2.5], [0, 8.7, 4.4, 1.4, 1.6]], { ...o, seg: 48, ring: 16 }, body);
+  const sway = tailSway(torso, 0.5, 1.2);
+  const neck = new THREE.Group(); neck.position.set(0, 8.7, 4.0); body.add(neck);
+  part([[0, 0, -0.8, 1.4, 1.6], [0, 1.6, 1.2, 1.0, 1.15], [0, 4.2, 2.8, 0.72, 0.78], [0, 7.2, 3.9, 0.52, 0.56], [0, 9.6, 4.5, 0.42, 0.46],
+    [0, 10.3, 5.2, 0.5, 0.56], [0, 10.2, 6.0, 0.36, 0.38], [0, 10.0, 6.6, 0.22, 0.22]], { ...o, seg: 40 }, neck);
+  dinoEyes(neck, 0.47, 10.45, 5.4, 0.08);
+  const legs = [
+    realLeg(body, -1.5, 7.6, 2.4, 7.6, 0.95, o), realLeg(body, 1.5, 7.6, 2.4, 7.6, 0.95, o),
+    realLeg(body, -1.6, 7.2, -2.6, 7.2, 1.0, o), realLeg(body, 1.6, 7.2, -2.6, 7.2, 1.0, o),
+  ];
+  return { root, body, neck, legs, sway };
+}
+
+function makeQuadReal(kind, o) {
+  const root = new THREE.Group(), body = new THREE.Group();
+  root.add(body);
+  let torso, head, legs;
+  if (kind === 'tri') {
+    torso = part([[0, 1.5, -4.8, 0.06, 0.06], [0, 1.9, -3.5, 0.38, 0.42], [0, 2.3, -2, 0.9, 0.95], [0, 2.6, -0.3, 1.3, 1.3],
+      [0, 2.45, 1.3, 1.25, 1.2], [0, 2.15, 2.4, 0.9, 0.9]], o, body);
+    head = new THREE.Group(); head.position.set(0, 2.1, 2.3); body.add(head);
+    part([[0, 0, -0.3, 0.8, 0.8], [0, 0.05, 0.6, 0.62, 0.66], [0, -0.25, 1.4, 0.36, 0.46], [0, -0.48, 1.95, 0.14, 0.2]], { ...o, stripes: 0, seg: 20 }, head);
+    const frill = mesh(sphere(1, 20, 12), new THREE.MeshStandardMaterial({ color: new THREE.Color(o.top).lerp(new THREE.Color(0xa0522d), 0.35), roughness: 0.8, bumpMap: scaleBump }), 0, 0.85, 0.05, head);
+    frill.scale.set(1.7, 1.5, 0.2);
+    frill.rotation.x = -0.75;
+    const horn = ivory();
+    for (const s of [-1, 1]) mesh(new THREE.ConeGeometry(0.13, 1.25, 8).translate(0, 0.6, 0), horn, s * 0.36, 0.5, 0.55, head).rotation.x = 0.95;
+    mesh(new THREE.ConeGeometry(0.12, 0.45, 8).translate(0, 0.2, 0), horn, 0, -0.08, 1.5, head).rotation.x = 0.5;
+    dinoEyes(head, 0.5, 0.25, 0.75, 0.07);
+    legs = [realLeg(body, -0.95, 1.9, 1.5, 1.9, 0.52, o), realLeg(body, 0.95, 1.9, 1.5, 1.9, 0.52, o),
+      realLeg(body, -1.0, 2.2, -0.6, 2.2, 0.62, o), realLeg(body, 1.0, 2.2, -0.6, 2.2, 0.62, o)];
+  } else if (kind === 'para') {
+    // parasaurolophus: kachní zobák a dlouhý dutý hřeben dozadu
+    torso = part([[0, 1.8, -6, 0.05, 0.06], [0, 2.3, -4.2, 0.35, 0.42], [0, 2.8, -2.2, 0.85, 0.95], [0, 3.0, -0.3, 1.05, 1.2],
+      [0, 2.75, 1.4, 0.85, 0.95], [0, 2.7, 2.5, 0.42, 0.48], [0, 3.1, 3.3, 0.32, 0.36]], o, body);
+    head = new THREE.Group(); head.position.set(0, 3.25, 3.4); body.add(head);
+    part([[0, 0, -0.25, 0.3, 0.36], [0, -0.08, 0.45, 0.27, 0.3], [0, -0.25, 1.05, 0.24, 0.17], [0, -0.3, 1.4, 0.22, 0.09]], { ...o, stripes: 0, seg: 14 }, head);
+    const crest = mesh(new THREE.CylinderGeometry(0.1, 0.16, 1.9, 8).translate(0, 0.95, 0), new THREE.MeshStandardMaterial({ color: o.stripe, roughness: 0.7, bumpMap: scaleBump }), 0, 0.2, 0.05, head);
+    crest.rotation.x = -1.15;
+    dinoEyes(head, 0.27, 0.08, 0.35, 0.05);
+    legs = [realLeg(body, -0.6, 2.2, 1.5, 2.2, 0.3, o), realLeg(body, 0.6, 2.2, 1.5, 2.2, 0.3, o),
+      realLeg(body, -0.9, 2.9, -0.4, 2.9, 0.6, o), realLeg(body, 0.9, 2.9, -0.4, 2.9, 0.6, o)];
+  } else {
+    // stegosaurus
+    const ctrl = [[0, 1.6, -4.8, 0.06, 0.06], [0, 2.2, -3.4, 0.35, 0.4], [0, 2.9, -1.6, 0.85, 1.0], [0, 3.1, 0, 1.05, 1.25],
+      [0, 2.6, 1.6, 0.85, 0.95], [0, 1.8, 2.6, 0.45, 0.5]];
+    torso = part(ctrl, o, body);
+    head = new THREE.Group(); head.position.set(0, 1.6, 2.6); body.add(head);
+    part([[0, 0, -0.2, 0.35, 0.38], [0, -0.25, 0.8, 0.28, 0.3], [0, -0.35, 1.3, 0.12, 0.14]], { ...o, stripes: 0, seg: 12 }, head);
+    dinoEyes(head, 0.27, -0.05, 0.75, 0.05);
+    // hřbetní desky podél páteře
+    const { path, rad } = torso.geometry.userData;
+    const plateMat = new THREE.MeshStandardMaterial({ color: 0x9c5b3a, roughness: 0.7 });
+    const plate = new THREE.ConeGeometry(0.8, 1.6, 4).scale(0.18, 1, 1).translate(0, 0.6, 0);
+    for (let i = 0; i < 11; i++) {
+      const u = 0.18 + i * 0.065, p = path.getPoint(u), r = rad.getPoint(u);
+      const pl = mesh(plate, plateMat, i % 2 ? 0.12 : -0.12, p.y + r.y * 0.85, p.z, body);
+      pl.scale.setScalar(0.3 + r.y * 0.45);
+    }
+    const spike = ivory();
+    for (const s of [-1, 1]) for (const dz of [0, 0.6]) {
+      const p = path.getPoint(0.12 + dz * 0.05);
+      const sp = mesh(new THREE.ConeGeometry(0.1, 1.1, 6).translate(0, 0.55, 0), spike, 0, p.y + 0.1, p.z + dz, body);
+      sp.rotation.z = -s * 1.0;
+    }
+    legs = [realLeg(body, -0.72, 1.65, 1.6, 1.65, 0.42, o), realLeg(body, 0.72, 1.65, 1.6, 1.65, 0.42, o),
+      realLeg(body, -0.85, 2.5, -0.7, 2.5, 0.58, o), realLeg(body, 0.85, 2.5, -0.7, 2.5, 0.58, o)];
+  }
+  const sway = tailSway(torso, 0.4, 0.5);
+  return { root, body, head, legs, sway };
+}
+
+function makePteranodon() {
+  const g = new THREE.Group();
+  const o = { top: 0x5d4a3a, belly: 0xd8cbb5, stripes: 0 };
+  part([[0, 0, -1.0, 0.06, 0.06], [0, 0, -0.4, 0.26, 0.28], [0, 0, 0.3, 0.3, 0.32], [0, 0.05, 0.8, 0.16, 0.18]], { ...o, seg: 14, ring: 10 }, g);
+  const skin = new THREE.MeshStandardMaterial({ color: 0x8b6b52, roughness: 0.85, side: THREE.DoubleSide });
+  const beak = mesh(new THREE.ConeGeometry(0.13, 1.9, 8), new THREE.MeshStandardMaterial({ color: 0xd9b26a, roughness: 0.6 }), 0, 0.1, 1.85, g);
+  beak.rotation.x = Math.PI / 2;
+  const crest = mesh(new THREE.ConeGeometry(0.1, 1.3, 6), skin, 0, 0.35, 0.35, g);
+  crest.rotation.x = -2.0;
+  dinoEyes(g, 0.13, 0.17, 0.95, 0.04);
+  const wing = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(0, 0, 0.45), new THREE.Vector3(1.7, 0.08, 0.55), new THREE.Vector3(0.2, 0, -0.6),
+    new THREE.Vector3(1.7, 0.08, 0.55), new THREE.Vector3(3.5, 0, -0.5), new THREE.Vector3(0.2, 0, -0.6),
+  ]);
+  wing.computeVertexNormals();
+  const wings = [-1, 1].map(s => {
+    const w = new THREE.Mesh(wing, skin);
+    w.scale.x = -s;
+    g.add(w);
+    return w;
+  });
+  g.scale.setScalar(1.5);
+  return { g, wings };
+}
+
+function volcano() {
+  let spot = null;
+  for (let i = 0; i < 500 && !spot; i++) spot = randomSpot(280, 420, 320);
+  spot = spot || { x: bbox.maxX + 350, z: bbox.minZ };
+  const v = new THREE.Group(); v.position.set(spot.x, 0, spot.z); world.add(v);
+  mesh(new THREE.CylinderGeometry(26, 140, 150, 12, 1, true), lambert(0x5d4037, { flatShading: true, side: THREE.DoubleSide }), 0, 75, 0, v);
+  const lava = mesh(new THREE.CircleGeometry(26, 16), new THREE.MeshBasicMaterial({ color: 0xff6d00 }), 0, 148, 0, v);
+  lava.rotation.x = -Math.PI / 2;
+  for (let i = 0; i < 5; i++) {
+    const a = i / 5 * TAU + 0.3;
+    const flow = mesh(new THREE.BoxGeometry(4, 70, 0.5), new THREE.MeshBasicMaterial({ color: 0xff3d00 }), Math.sin(a) * 58, 110, Math.cos(a) * 58, v);
+    flow.rotation.y = a;
+    flow.rotation.x = 0.73;
+    flow.scale.y = 0.9 + Math.random() * 0.4;
+  }
+  const smokeMat = () => lambert(0x6d6d6d, { transparent: true, opacity: 0.6, depthWrite: false });
+  const puffs = [];
+  for (let i = 0; i < 14; i++) {
+    const p = mesh(sphere(10, 10, 8), smokeMat(), 0, 150, 0, v);
+    p.userData.t = i / 14;
+    puffs.push(p);
+  }
+  animators.push((t, dt) => {
+    for (const p of puffs) {
+      p.userData.t = (p.userData.t + dt * 0.06) % 1;
+      const u = p.userData.t;
+      p.position.set(Math.sin(u * 5 + p.id) * 15 * u + u * 60, 150 + u * 180, Math.cos(u * 3 + p.id) * 15 * u);
+      p.scale.setScalar(0.6 + u * 2.4);
+      p.material.opacity = 0.65 * (1 - u);
+    }
+    lava.material.color.setHSL(0.05 + Math.sin(t * 3) * 0.015, 1, 0.5);
+  });
+}
+
+// jezero s bahnitým břehem; nic dalšího se do něj nesází
+function lake(r) {
+  let s = null;
+  for (let i = 0; i < 1500 && !s; i++) s = randomSpot(r * 1.4 + WALL + 8, r * 1.4 + 160, 150);
+  if (!s) return null;
+  const shape = new THREE.Shape();
+  for (let i = 0; i < 48; i++) {
+    const a = i / 48 * TAU, q = r * (1 + 0.12 * Math.sin(a * 3 + 1) + 0.07 * Math.sin(a * 5));
+    i ? shape.lineTo(Math.cos(a) * q, Math.sin(a) * q) : shape.moveTo(Math.cos(a) * q, Math.sin(a) * q);
+  }
+  const mud = mesh(new THREE.ShapeGeometry(shape).scale(1.15, 1.15, 1), lambert(0x5e4e38), s.x, 0.05, s.z, world);
+  mud.rotation.x = -Math.PI / 2;
+  const water = mesh(new THREE.ShapeGeometry(shape), new THREE.MeshStandardMaterial({ color: 0x3a6670, roughness: 0.08, metalness: 0.25 }), s.x, 0.1, s.z, world);
+  water.rotation.x = -Math.PI / 2;
+  keepOut.push({ x: s.x, z: s.z, r: r * 1.45 });
+  return { x: s.x, z: s.z, r };
+}
+
+// úsek trati, podél kterého je dost místa (kvůli procházejícímu T-Rexovi)
+function findStretch(len, side, extra) {
+  for (let tries = 0; tries < 80; tries++) {
+    const k0 = Math.floor(Math.random() * N);
+    let ok = true;
+    for (let d = 0; d <= len && ok; d += 8) ok = !!edgeSpot(k0 + d, side, extra, WALL + extra - 3);
+    if (ok) return k0;
+  }
+  return null;
+}
+const offTrack = (k, off) => {
+  k = ((Math.floor(k) % N) + N) % N;
+  return { x: pts[k].x + right[k].x * off, z: pts[k].z + right[k].z * off, h: headingAt(k) };
+};
+
+// je nějaké auto dost blízko na to, aby stálo za to animovat ocas?
+const seen = (o, r = 260) => nearestCar(o.position.x, o.position.z).dist < r;
+
+function decorDino2() {
+  dinoMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.85, bumpMap: scaleBump, bumpScale: 2 });
+  const L = lake(55);
+  volcano();
+  mountains(0x5f6b55, null, 24, 880);
+
+  // rostliny: araukárie, sekvoje, cykasy, stromové kapradiny, přesličky
+  const tint = (h, s, l) => () => new THREE.Color().setHSL(h + Math.random() * 0.05, s, l + Math.random() * 0.08);
+  {
+    const tiers = [];
+    for (let i = 0; i < 3; i++) tiers.push(new THREE.SphereGeometry(4.8 - i * 1.2, 9, 5).scale(1, 0.3, 1).translate(0, 18 + i * 2.2, 0));
+    scatter([[new THREE.CylinderGeometry(0.45, 0.9, 22, 7).translate(0, 11, 0), lambert(0x6b4f3a)],
+      [mergeGeometries(tiers), lambert(0xffffff, { flatShading: true })]], 110, {
+      minD: WALL + 14, maxD: 450, scale: [0.8, 1.4], color: i => i === 1 && tint(0.28, 0.45, 0.17)(),
+    });
+    scatter([[new THREE.CylinderGeometry(0.8, 1.3, 8, 7).translate(0, 4, 0), lambert(0x5a3b2a)],
+      [new THREE.ConeGeometry(4.5, 26, 8).translate(0, 19, 0), lambert(0xffffff, { flatShading: true })]], 140, {
+      minD: WALL + 14, maxD: 500, scale: [0.7, 1.3], color: i => i === 1 && tint(0.33, 0.4, 0.14)(),
+    });
+    const frond = (n, len, lift, y) => {
+      const fr = [];
+      for (let i = 0; i < n; i++) fr.push(new THREE.PlaneGeometry(0.9, len).translate(0, len / 2, 0).rotateX(lift).rotateY(i / n * TAU + Math.random() * 0.3).translate(0, y, 0));
+      return mergeGeometries(fr);
+    };
+    const leaf = lambert(0xffffff, { side: THREE.DoubleSide });
+    scatter([[new THREE.CylinderGeometry(0.6, 0.85, 1.8, 8).translate(0, 0.9, 0), lambert(0x6d5a3f, { flatShading: true })],
+      [frond(12, 3.8, 0.75, 1.7), leaf]], 220, { minD: WALL + 3, maxD: 300, scale: [0.7, 1.4], color: i => i === 1 && tint(0.22, 0.5, 0.25)() });
+    scatter([[new THREE.CylinderGeometry(0.22, 0.35, 5.5, 6).translate(0, 2.75, 0), lambert(0x4e3b2a)],
+      [frond(9, 4.5, 1.9, 5.4), leaf]], 160, { minD: WALL + 5, maxD: 350, scale: [0.8, 1.5], color: i => i === 1 && tint(0.27, 0.55, 0.22)() });
+    const reeds = [];
+    for (let i = 0; i < 9; i++) reeds.push(new THREE.ConeGeometry(0.07, rand(1.8, 3), 4).translate(rand(-0.7, 0.7), 1.1, rand(-0.7, 0.7)));
+    scatter([[mergeGeometries(reeds), lambert(0xffffff)]], 320, { minD: WALL + 2, maxD: 220, scale: [0.7, 1.3], color: () => tint(0.2, 0.45, 0.3)() });
+    scatter([[new THREE.DodecahedronGeometry(2, 1).translate(0, 0.6, 0), lambert(0x857b6c, { flatShading: true })]], 80, {
+      minD: WALL + 4, maxD: 350, scale: [0.5, 2.8], tilt: 0.4,
+    });
+    // rákosí kolem jezera
+    if (L) {
+      const spots = [];
+      for (let i = 0; i < 90; i++) { const a = Math.random() * TAU, q = L.r * rand(1.0, 1.25); spots.push({ x: L.x + Math.cos(a) * q, z: L.z + Math.sin(a) * q }); }
+      scatter([[mergeGeometries(reeds), lambert(0x7c8f45)]], 90, { spots, scale: [0.8, 1.5] });
+    }
+  }
+
+  // sauropodi – hluboké volání slyšet zdaleka, při něm zvednou krk
+  const sauroCols = [{ top: 0x6e6a5c, belly: 0xb7ad94, stripe: 0x55513f, stripes: 5 }, { top: 0x6b5d4a, belly: 0xc2b090, stripe: 0x4d4234, stripes: 7 },
+    { top: 0x5e6450, belly: 0xb5b394, stripe: 0x474c3a, stripes: 6 }];
+  const sauroVoice = (d, i) => {
+    let callT = rand(3, 20), lift = 0;
+    return dt => {
+      callT -= dt;
+      if (callT <= 0) { callT = rand(14, 30); if (dinoCall('sauro', d.root.position.x, d.root.position.z, 320)) lift = 3.4; }
+      lift = Math.max(0, lift - dt);
+      return lift > 0 ? Math.sin(lift / 3.4 * Math.PI) * 0.35 : 0;
+    };
+  };
+  if (L) {
+    // stádo kolem jezera: dospělí s mláďaty obcházejí, dva pijí
+    const R = L.r * 1.55;
+    [[0, 1, true], [0.13, 0.45, true], [2.2, 0.9, true], [2.33, 0.42, true], [3.9, 1, true], [1.3, 1, false], [4.8, 0.85, false]].forEach(([a0, sc, walking], i) => {
+      const d = makeSauropod(sauroCols[i % 3]);
+      world.add(d.root);
+      d.root.scale.setScalar(sc);
+      let a = -a0, ph = i;
+      if (!walking) {
+        d.root.position.set(L.x + Math.cos(a) * L.r * 1.25, 0, L.z + Math.sin(a) * L.r * 1.25);
+        d.root.rotation.y = Math.atan2(L.x - d.root.position.x, L.z - d.root.position.z);
+        quadStride(d.legs, 0, 0);
+      }
+      const voice = sauroVoice(d, i);
+      animators.push((t, dt) => {
+        const up = voice(dt);
+        if (walking) {
+          a += dt * 2.4 / R;
+          ph += dt * 1.6 / Math.sqrt(sc);
+          d.root.position.set(L.x + Math.cos(a) * R, 0, L.z + Math.sin(a) * R);
+          d.root.rotation.y = Math.atan2(-Math.sin(a), Math.cos(a));
+          quadStride(d.legs, ph, 0.22);
+          d.body.position.y = Math.abs(Math.sin(ph)) * 0.15;
+          d.neck.rotation.x = 0.1 + Math.sin(t * 0.3 + i) * 0.08 - up;
+        } else {
+          d.neck.rotation.x = 1.15 + Math.sin(t * 0.25 + i) * 0.15 - up * 3;
+        }
+        d.neck.rotation.y = Math.sin(t * 0.2 + i) * 0.3;
+        if (seen(d.root, 400)) d.sway(t * 0.8 + i);
+      });
+    });
+  }
+  // další sauropodi okusují stromy po celém údolí
+  for (let i = 0; i < 7; i++) {
+    let s = null;
+    for (let j = 0; j < 300 && !s; j++) s = randomSpot(45, 300);
+    if (!s) continue;
+    const d = makeSauropod(sauroCols[i % 3]);
+    d.root.position.set(s.x, 0, s.z);
+    d.root.rotation.y = Math.random() * TAU;
+    d.root.scale.setScalar(rand(0.75, 1.1));
+    world.add(d.root);
+    quadStride(d.legs, 0, 0);
+    const voice = sauroVoice(d, i);
+    animators.push((t, dt) => {
+      d.neck.rotation.x = -0.15 + Math.sin(t * 0.4 + i * 3) * 0.12 - voice(dt);
+      d.neck.rotation.y = Math.sin(t * 0.25 + i) * 0.4;
+      if (seen(d.root, 400)) d.sway(t * 0.7 + i * 2);
+    });
+  }
+
+  // T-Rexové chodí podél trati sem a tam, sledují auta a řvou
+  const rexCols = [{ top: 0x4f3f2d, belly: 0xbfa77d, stripe: 0x2f251a }, { top: 0x5a4a35, belly: 0xc4ae86, stripe: 0x3a2c1c },
+    { top: 0x47402f, belly: 0xb8a57c, stripe: 0x26201a }];
+  for (let n = 0; n < 3; n++) {
+    const side = Math.random() < 0.5 ? 1 : -1, extra = 13, len = 220;
+    let k0 = findStretch(len, side, extra), sd = side;
+    if (k0 === null) { k0 = findStretch(len, -side, extra); sd = -side; }
+    if (k0 === null) continue;
+    const rex = makeTheropod(rexCols[n]);
+    world.add(rex.root);
+    let s = Math.random() * len, dir = 1, turn = 0, ph = 0, yaw = 0, roarT = 0, cool = 3 + n * 2, lastStep = 0, heading = 0;
+    animators.push((t, dt) => {
+      const near = nearestCar(rex.root.position.x, rex.root.position.z);
+      const moving = turn <= 0 && roarT <= 0;
+      if (moving) {
+        s += dir * dt * 4.5 / seg;
+        if (s > len || s < 0) { s = Math.max(0, Math.min(len, s)); dir = -dir; turn = 2.2; }
+      } else turn -= dt;
+      const p = offTrack(k0 + s, sd * (WALL + extra));
+      const want = p.h + (dir < 0 ? Math.PI : 0);
+      heading += Math.atan2(Math.sin(want - heading), Math.cos(want - heading)) * Math.min(1, dt * 1.5);
+      rex.root.position.set(p.x, 0, p.z);
+      rex.root.rotation.y = heading;
+      ph += dt * (moving ? 4.1 : turn > 0 ? 2.5 : 0);
+      rex.stride(ph, moving || turn > 0 ? 0.42 : 0);
+      rex.body.position.y = Math.abs(Math.cos(ph)) * 0.15;
+      rex.body.rotation.z = Math.sin(ph) * 0.03;
+      if (near.dist < 260) rex.sway(t * 1.4, 1);
+      // dupání – blízké auto to cítí v ovladači
+      const step = Math.sin(ph) > 0 ? 1 : -1;
+      if (step !== lastStep && moving && near.dist < 70 && state === 'race') {
+        beep(42, 0.25, 0.3 * (1 - near.dist / 70), 'sine');
+        rumble(near.car, 0.5 * (1 - near.dist / 70));
+      }
+      lastStep = step;
+      let look = Math.atan2(near.car.x - p.x, near.car.z - p.z) - heading;
+      look = Math.max(-0.9, Math.min(0.9, Math.atan2(Math.sin(look), Math.cos(look))));
+      yaw += ((near.dist < 120 ? look : 0) - yaw) * Math.min(1, dt * 2.5);
+      rex.neck.rotation.y = yaw;
+      cool -= dt;
+      if (near.dist < 60 && cool <= 0) { roarT = 2.4; cool = rand(7, 11); if (state === 'race') roar(1 - near.dist / 90); }
+      roarT = Math.max(0, roarT - dt);
+      const r = roarT > 0 ? Math.sin(Math.min(1, roarT / 2.4) * Math.PI) : 0;
+      rex.jaw.rotation.x = 0.04 + r * 0.75;
+      rex.neck.rotation.x = -r * 0.35 + Math.sin(t * 1.3) * 0.03;
+    });
+  }
+
+  // T-Rexové stojící u trati – otáčí hlavu za auty a zařvou
+  [[0.3, 1], [0.78, -1]].forEach(([f, side], n) => {
+    const s = findEdgeSpot(Math.round(f * N), side, 12);
+    if (!s) return;
+    const rex = makeTheropod(rexCols[(n + 1) % 3]);
+    rex.root.position.set(s.x, 0, s.z);
+    rex.root.rotation.y = s.face + (side > 0 ? 0.9 : -0.9);
+    world.add(rex.root);
+    rex.stride(0, 0);
+    let yaw = 0, roarT = 0, cool = 2;
+    animators.push((t, dt) => {
+      const near = nearestCar(s.x, s.z);
+      let look = Math.atan2(near.car.x - s.x, near.car.z - s.z) - rex.root.rotation.y;
+      look = Math.max(-1, Math.min(1, Math.atan2(Math.sin(look), Math.cos(look))));
+      yaw += (look - yaw) * Math.min(1, dt * 3);
+      rex.neck.rotation.y = yaw;
+      cool -= dt;
+      if (near.dist < 50 && cool <= 0) { roarT = 2.4; cool = rand(6, 9); if (state === 'race') roar(1 - near.dist / 90); }
+      roarT = Math.max(0, roarT - dt);
+      const r = roarT > 0 ? Math.sin(Math.min(1, roarT / 2.4) * Math.PI) : 0;
+      rex.jaw.rotation.x = 0.04 + r * 0.8 + (r ? 0 : Math.sin(t * 2) * 0.03);
+      rex.neck.rotation.x = -r * 0.4;
+      rex.body.position.y = Math.sin(t * 1.4 + n) * 0.06;
+      if (near.dist < 260) rex.sway(t + n, 0.5);
+    });
+  });
+
+  // T-Rex u kostry – žere, při průjezdu aut zvedne hlavu a zařve
+  {
+    const s = findEdgeSpot(Math.round(0.62 * N), 1, 16);
+    if (s) {
+      const g = new THREE.Group(); g.position.set(s.x, 0, s.z); g.rotation.y = s.face + Math.PI / 2; world.add(g);
+      const bone = ivory();
+      for (let i = 0; i < 9; i++) {
+        const rib = mesh(new THREE.TorusGeometry(2.4 - Math.abs(i - 4) * 0.2, 0.14, 6, 14, Math.PI), bone, 0, 0, -4 + i * 0.9, g);
+        rib.rotation.z = Math.PI * 0.05;
+      }
+      mesh(new THREE.CylinderGeometry(0.2, 0.2, 9, 6), bone, 0, 2.4, 0, g).rotation.x = Math.PI / 2;
+      for (let i = 0; i < 10; i++) mesh(sphere(0.32, 6, 5), bone, Math.sin(i * 0.4) * 2, 0.3, 5 + i * 0.75, g);
+      mesh(new THREE.BoxGeometry(1.0, 0.7, 1.8), bone, 2.6, 0.4, 12.6, g);
+      const rex = makeTheropod({ top: 0x5b4632, belly: 0xc8b48a, stripe: 0x352a1d });
+      rex.root.position.set(s.x - Math.sin(s.face) * 2, 0, s.z - Math.cos(s.face) * 2);
+      rex.root.rotation.y = s.face + Math.PI;
+      world.add(rex.root);
+      rex.stride(0, 0);
+      let roarT = 0, cool = 2;
+      animators.push((t, dt) => {
+        const near = nearestCar(s.x, s.z);
+        cool -= dt;
+        if (near.dist < 45 && cool <= 0) { roarT = 2.4; cool = 8; if (state === 'race') roar(1 - near.dist / 90); }
+        roarT = Math.max(0, roarT - dt);
+        const up = roarT > 0 ? Math.sin(Math.min(1, roarT / 2.4) * Math.PI) : 0;
+        const chew = Math.max(0, Math.sin(t * 1.7));
+        rex.body.rotation.x = 0.28 * (1 - up);
+        rex.neck.rotation.x = 0.55 * (1 - up) - up * 0.3 + chew * 0.08 * (1 - up);
+        rex.jaw.rotation.x = up > 0 ? 0.1 + up * 0.7 : chew * 0.3;
+        rex.neck.rotation.y = up * 0.5 * Math.sin(t * 2);
+        if (near.dist < 260) rex.sway(t, 0.6);
+      });
+    }
+  }
+
+  // stáda býložravců – pomalu se pasou, občas se ozvou a zvednou hlavu
+  const herd = (f, kind, count, cols) => {
+    const home = findEdgeSpot(Math.round(f * N), Math.random() < 0.5 ? 1 : -1, 24, WALL + 16);
+    if (!home) return;
+    for (let i = 0; i < count; i++) {
+      const pos = { x: home.x + rand(-12, 12), z: home.z + rand(-12, 12) };
+      if (trackDist(pos.x, pos.z) < WALL + 8) continue;
+      const d = makeQuadReal(kind, cols[i % cols.length]);
+      d.root.position.set(pos.x, 0, pos.z);
+      d.root.scale.setScalar(i === count - 1 ? 0.55 : rand(0.85, 1.1));   // jedno mládě
+      let h = Math.random() * TAU, target = null, wait = rand(1, 6), ph = 0, callT = rand(2, 15), callUp = 0;
+      world.add(d.root);
+      quadStride(d.legs, 0, 0);
+      animators.push((t, dt) => {
+        const P = d.root.position;
+        callT -= dt;
+        if (callT <= 0) { callT = rand(9, 22); if (dinoCall(kind, P.x, P.z, kind === 'para' ? 220 : 130)) callUp = 1.5; }
+        callUp = Math.max(0, callUp - dt);
+        const up = callUp > 0 ? Math.sin(callUp / 1.5 * Math.PI) : 0;
+        if (!target) {
+          wait -= dt;
+          if (wait <= 0) {
+            const tx = home.x + rand(-15, 15), tz = home.z + rand(-15, 15);
+            if (trackDist(tx, tz) > WALL + 8) target = { x: tx, z: tz }; else wait = 1;
+          }
+          d.head.rotation.x = (0.45 + Math.sin(t * 2 + i) * 0.08) * (1 - up) - up * 0.45;
+        } else {
+          const dx = target.x - P.x, dz = target.z - P.z, dd = Math.hypot(dx, dz);
+          const want = Math.atan2(dx, dz);
+          h += Math.atan2(Math.sin(want - h), Math.cos(want - h)) * Math.min(1, dt * 1.5);
+          P.x += Math.sin(h) * dt * 1.3; P.z += Math.cos(h) * dt * 1.3;
+          ph += dt * 3.2;
+          quadStride(d.legs, ph, 0.3);
+          d.head.rotation.x = Math.sin(t * 0.8 + i) * 0.1 - up * 0.45;
+          if (dd < 1) { target = null; wait = rand(3, 9); quadStride(d.legs, 0, 0); }
+        }
+        d.root.rotation.y = h;
+        if (seen(d.root)) d.sway(t * 1.2 + i, 1);
+      });
+    }
+  };
+  const triCols = [{ top: 0x5d5a3c, belly: 0xbdb08a, stripe: 0x3d3a25, stripes: 5 }, { top: 0x6b5236, belly: 0xc9b28c, stripe: 0x4a3622, stripes: 4 },
+    { top: 0x55503a, belly: 0xb8a985, stripe: 0x37321f, stripes: 6 }];
+  const stegCols = [{ top: 0x5f6340, belly: 0xc4b98f, stripe: 0x3f4228, stripes: 6 }, { top: 0x6a5a3c, belly: 0xc9b690, stripe: 0x45391f, stripes: 5 }];
+  const paraCols = [{ top: 0x4f6046, belly: 0xc8c09a, stripe: 0x6b3b2a, stripes: 8 }, { top: 0x5c5a40, belly: 0xd0c49c, stripe: 0x7a4a2a, stripes: 9 }];
+  herd(0.15, 'tri', 6, triCols);
+  herd(0.5, 'tri', 5, triCols);
+  herd(0.9, 'tri', 5, triCols);
+  herd(0.42, 'steg', 4, stegCols);
+  herd(0.7, 'steg', 4, stegCols);
+  herd(0.24, 'para', 6, paraCols);
+  herd(0.6, 'para', 5, paraCols);
+
+  // dvě smečky raptorů běží podél trati – dají se předjet, cestou ječí
+  [[0.25, 27], [0.72, 24]].forEach(([start, speed], pack) => {
+    for (let i = 0; i < 4; i++) {
+      const r = makeTheropod({ top: pack ? 0x5a4a3a : 0x6a5338, belly: 0xd3c3a0, stripe: pack ? 0x7a3b1c : 0x2e2418, raptor: true });
+      world.add(r.root);
+      let pos = (start + i * 0.01) * N, ph = i, callT = rand(1, 5), shriek = 0;
+      const side = i % 2 ? -1 : 1;
+      animators.push((t, dt) => {
+        pos = (pos + dt * speed / seg) % N;
+        const p = offTrack(pos, side * (WALL + 5 + (i >> 1) * 2));
+        r.root.position.set(p.x, 0, p.z);
+        r.root.rotation.y = p.h;
+        ph += dt * 13;
+        r.stride(ph, 0.65);
+        r.body.position.y = Math.abs(Math.cos(ph)) * 0.35;
+        r.body.rotation.x = 0.08;
+        callT -= dt;
+        if (callT <= 0) { callT = rand(3, 7); if (dinoCall('raptor', p.x, p.z, 100)) shriek = 0.8; }
+        shriek = Math.max(0, shriek - dt);
+        r.neck.rotation.x = -0.1 - shriek * 0.4;
+        r.jaw.rotation.x = 0.1 + Math.sin(t * 5 + i) * 0.1 + shriek * 0.7;
+        if (seen(r.root, 200)) r.sway(t * 6, 0.4);
+      });
+    }
+  });
+
+  // pteranodoni plachtí nad údolím, několik nízko nad tratí
+  for (let i = 0; i < 16; i++) {
+    const { g, wings } = makePteranodon();
+    world.add(g);
+    const c = pts[Math.floor(Math.random() * N)];
+    const low = i < 4;
+    const R = low ? rand(35, 55) : rand(60, 160), H = low ? rand(13, 20) : rand(30, 80);
+    const sp = (low ? rand(0.3, 0.4) : rand(0.12, 0.22)) * (i % 2 ? 1 : -1), ph = Math.random() * TAU;
+    let callT = rand(3, 15);
+    animators.push((t, dt) => {
+      const a = t * sp + ph;
+      g.position.set(c.x + Math.cos(a) * R, H + Math.sin(t * 0.5 + ph) * 4, c.z + Math.sin(a) * R);
+      g.rotation.y = Math.atan2(-Math.sin(a) * sp, Math.cos(a) * sp);
+      g.rotation.z = -Math.sign(sp) * 0.35;
+      // většinou plachtí, občas máchne křídly
+      const flap = Math.sin(t * 0.7 + ph) > 0.75 ? Math.sin(t * 6) * 0.5 : 0.08;
+      wings[0].rotation.z = flap; wings[1].rotation.z = -flap;
+      callT -= dt;
+      if (callT <= 0) { callT = rand(8, 18); dinoCall('ptero', g.position.x, g.position.z, 120); }
     });
   }
 }
@@ -932,6 +1571,19 @@ const TRACKS = [
     decorate: decorDino,
   },
   {
+    name: 'Pravěké údolí', emoji: '🦕',
+    ctrl: [[0,-170],[110,-180],[210,-140],[260,-50],[230,40],[150,70],[110,140],[170,210],[100,265],[0,235],[-60,165],
+      [-140,205],[-230,165],[-255,60],[-190,-20],[-235,-110],[-130,-175]],
+    sky: 0xd3dccb, fog: [200, 980], hemi: [0xfff1d6, 0x4a5a33, 1.15], sun: [0xffe2b5, 2.1],
+    ground: ['#566339', ['#4c5832', '#606d40', '#4a5230', '#6a6f41', '#5b5136']],
+    gravel: ['#5e4d39', ['#544431', '#6b5843', '#4a3c2c']],
+    road: { base: '#86704f', specks: ['#776246', '#957e5c', '#7c6748', '#9c8763'], ruts: '#6a5739', line: null },
+    curb: ['#8a8174', '#a39a8b'], wall: ['#5d4030', '#7a5338'],
+    gate: { pillar: 0x6d4c41, bg: '#3e2723', fg: '#ffcc80', text: '🦕 START • CÍL 🦕', crowd: ['#8d6e63', '#a1887f', '#c8b48a', '#6d8b3a', '#ffcc80'] },
+    boosts: [[0.12, 0], [0.36, -5], [0.6, 5], [0.84, 0]],
+    decorate: decorDino2,
+  },
+  {
     name: 'Strašidelný okruh', emoji: '🎃',
     ctrl: [[0,-140],[110,-150],[190,-90],[180,0],[240,80],[190,180],[80,200],[10,140],[-70,200],
       [-180,190],[-240,90],[-170,20],[-220,-80],[-120,-150]],
@@ -947,15 +1599,7 @@ const TRACKS = [
 ];
 
 function disposeWorld() {
-  if (!world) return;
-  world.traverse(o => {
-    o.geometry?.dispose();
-    for (const m of [].concat(o.material || [])) {
-      for (const key of ['map', 'emissiveMap']) m[key]?.dispose();
-      m.dispose();
-    }
-  });
-  scene.remove(world);
+  if (world) disposeObj(world);
 }
 
 function buildTrack(i) {
@@ -964,6 +1608,7 @@ function buildTrack(i) {
   world = new THREE.Group();
   scene.add(world);
   animators = [];
+  keepOut = [];
 
   const ctrl = theme.ctrl.map(([x, z]) => new THREE.Vector3(x * 1.5, 0, z * 1.5));
   const curve = new THREE.CatmullRomCurve3(ctrl, true, 'centripetal');
@@ -995,10 +1640,17 @@ function buildTrack(i) {
   const ground = mesh(new THREE.PlaneGeometry(4000, 4000), lambert(0xffffff, { map: grassTex }), 0, 0, 0, world);
   ground.rotation.x = -Math.PI / 2;
 
+  const road = theme.road || { base: '#3b3e44', specks: ['#33363b', '#45484f', '#2e3035'], line: '#f5f5f5' };
   const asphaltTex = canvasTex(256, 256, (x, w, h) => {
-    x.fillStyle = '#3b3e44'; x.fillRect(0, 0, w, h);
-    noise(x, w, h, 3000, ['#33363b', '#45484f', '#2e3035']);
-    x.fillStyle = '#f5f5f5';
+    x.fillStyle = road.base; x.fillRect(0, 0, w, h);
+    noise(x, w, h, 3000, road.specks);
+    if (road.ruts) {
+      // vyjeté koleje na prašné cestě
+      x.fillStyle = road.ruts;
+      for (const c of [0.3, 0.7]) for (let i = 0; i < 260; i++) x.fillRect(w * c + rand(-14, 14), Math.random() * h, 3, 3);
+    }
+    if (!road.line) return;
+    x.fillStyle = road.line;
     x.fillRect(6, 0, 6, h); x.fillRect(w - 12, 0, 6, h);
     x.fillRect(w / 2 - 3, 0, 6, h / 2);
   });
@@ -1045,61 +1697,444 @@ const shadowTex = canvasTex(64, 64, (x, w, h) => {
   x.fillStyle = g; x.fillRect(0, 0, w, h);
 }, false);
 
-function buildCar(color) {
-  const g = new THREE.Group();
-  const body = new THREE.Group();
+function disposeObj(o) {
+  o.traverse(c => {
+    c.geometry?.dispose();
+    for (const m of [].concat(c.material || [])) {
+      for (const key of ['map', 'emissiveMap']) if (m[key] && m[key] !== shadowTex) m[key].dispose();
+      m.dispose();
+    }
+  });
+  o.parent?.remove(o);
+}
+
+function textTex(text, bg, fg, w = 512, h = 128, size = 72) {
+  return canvasTex(w, h, (x, W, H) => {
+    x.fillStyle = bg; x.fillRect(0, 0, W, H);
+    x.fillStyle = fg; x.font = `bold ${size}px "Russo One", sans-serif`;
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.fillText(text, W / 2, H / 2 + 4);
+  }, false);
+}
+
+// stavebnice aut: lokální +z = dopředu, y = 0 je zem
+function carKit(color) {
+  const g = new THREE.Group(), body = new THREE.Group();
   g.add(body);
-  const paint = lambert(color);
-  const dark = lambert(0x1d1d1d);
-  const glass = lambert(0x1c2b3a);
-  const white = lambert(0xffffff);
-  mesh(new THREE.BoxGeometry(2.3, 0.6, 4.6), paint, 0, 0.7, 0, body);
-  mesh(new THREE.BoxGeometry(0.55, 0.62, 4.62), white, 0, 0.7, 0, body);
-  mesh(new THREE.BoxGeometry(1.8, 0.62, 2.0), glass, 0, 1.3, -0.4, body);
-  mesh(new THREE.BoxGeometry(1.84, 0.12, 1.8), paint, 0, 1.66, -0.4, body);
-  mesh(new THREE.BoxGeometry(2.4, 0.1, 0.6), dark, 0, 1.45, -2.1, body);
-  for (const s of [-1, 1]) {
-    mesh(new THREE.BoxGeometry(0.1, 0.4, 0.1), dark, s * 0.7, 1.2, -2.1, body);
-    mesh(new THREE.BoxGeometry(0.5, 0.2, 0.05), new THREE.MeshBasicMaterial({ color: 0xfff8e1 }), s * 0.7, 0.8, 2.31, body);
-    mesh(new THREE.BoxGeometry(0.5, 0.2, 0.05), new THREE.MeshBasicMaterial({ color: 0xff1744 }), s * 0.7, 0.8, -2.31, body);
+  const cache = new Map();
+  const mat = (c, basic = false) => {
+    if (typeof c !== 'number') return c;
+    const key = c + (basic ? 'b' : '');
+    if (!cache.has(key)) cache.set(key, basic ? new THREE.MeshBasicMaterial({ color: c }) : lambert(c));
+    return cache.get(key);
+  };
+  const k = {
+    g, body, front: [], wheels: [], beacons: [], exhaust: null, len: 4.6, wid: 2.4, lampY: 0.8,
+    P: lambert(color), glass: lambert(0x1c2b3a), dark: lambert(0x1d1d1d),
+    basic: c => mat(c, true),
+    box(w, h, d, m, x, y, z, par = body) { return mesh(new THREE.BoxGeometry(w, h, d), mat(m), x, y, z, par); },
+    cyl(rt, rb, h, m, x, y, z, rx = 0, rz = 0, par = body) {
+      const o = mesh(new THREE.CylinderGeometry(rt, rb, h, 14), mat(m), x, y, z, par);
+      o.rotation.set(rx, 0, rz);
+      return o;
+    },
+    ball(r, m, x, y, z, sx = 1, sy = 1, sz = 1, par = body) {
+      const o = mesh(sphere(r, 16, 12), mat(m), x, y, z, par);
+      o.scale.set(sx, sy, sz);
+      return o;
+    },
+    wheel(x, z, r = 0.5, w = 0.45, steer = z > 0, hub = 0xbdbdbd) {
+      const pivot = new THREE.Group();
+      pivot.position.set(x, r, z);
+      g.add(pivot);
+      const wh = new THREE.Group();
+      pivot.add(wh);
+      mesh(new THREE.CylinderGeometry(r, r, w, 18), mat(0x1d1d1d), 0, 0, 0, wh).rotation.z = Math.PI / 2;
+      mesh(new THREE.CylinderGeometry(r * 0.55, r * 0.55, w + 0.04, 10), mat(hub), 0, 0, 0, wh).rotation.z = Math.PI / 2;
+      mesh(new THREE.BoxGeometry(w + 0.08, r * 0.95, r * 0.2), mat(0x555555), 0, 0, 0, wh);
+      k.wheels.push(wh);
+      if (steer) k.front.push(pivot);
+    },
+    wheels4(x, zf, zr, r, w, hub) {
+      for (const s of [-1, 1]) { k.wheel(s * x, zf, r, w, true, hub); k.wheel(s * x, zr, r, w, false, hub); }
+    },
+    lamps(y, zf, zr, xs = 0.7, w = 0.5, h = 0.2) {
+      for (const s of [-1, 1]) {
+        if (zf !== null) k.box(w, h, 0.06, k.basic(0xfff8e1), s * xs, y, zf);
+        if (zr !== null) k.box(w, h, 0.06, k.basic(0xff1744), s * xs, y, zr);
+      }
+      k.lampY = y;
+    },
+    // majáky – blikají střídavě podle fáze
+    beacon(x, y, z, c, phase = 0, w = 0.45, h = 0.22, d = 0.4) {
+      const o = k.box(w, h, d, new THREE.MeshBasicMaterial({ color: c }), x, y, z);
+      o.userData = { c: new THREE.Color(c), phase };
+      k.beacons.push(o);
+      return o;
+    },
+    // nápis na obou bocích
+    label(text, w, h, x, y, z, bg, fg) {
+      const m = lambert(0xffffff, { map: textTex(text, bg, fg) });
+      for (const s of [-1, 1]) mesh(new THREE.PlaneGeometry(w, h), m, s * x, y, z, body).rotation.y = s * Math.PI / 2;
+    },
+    // nápis zepředu (back = zezadu)
+    sign(text, w, h, y, z, bg, fg, back = false) {
+      const p = mesh(new THREE.PlaneGeometry(w, h), lambert(0xffffff, { map: textTex(text, bg, fg) }), 0, y, z, body);
+      if (back) p.rotation.y = Math.PI;
+    },
+  };
+  return k;
+}
+
+// st = [rychlost, zrychlení, ovládání, terén] 1–5; r = poloměr pro srážky; m = hmotnost; cam = oddálení kamery;
+// paint = vlastní barva auta (jinak barva hráče – pak má auto praporek v barvě hráče)
+const CARS = [
+  { name: 'Sporťák', emoji: '🏎️', st: [4, 4, 4, 1], build(k) {
+    k.box(2.3, 0.6, 4.6, k.P, 0, 0.7, 0);
+    k.box(0.55, 0.62, 4.62, 0xffffff, 0, 0.7, 0);
+    k.box(1.8, 0.62, 2.0, k.glass, 0, 1.3, -0.4);
+    k.box(1.84, 0.12, 1.8, k.P, 0, 1.66, -0.4);
+    k.box(2.4, 0.1, 0.6, k.dark, 0, 1.45, -2.1);
+    for (const s of [-1, 1]) k.box(0.1, 0.4, 0.1, k.dark, s * 0.7, 1.2, -2.1);
+    k.lamps(0.8, 2.31, -2.31);
+    k.wheels4(1.15, 1.45, -1.45, 0.5, 0.45);
+  } },
+  { name: 'Formule', emoji: '🏁', st: [5, 4, 3, 1], pitch: 1.25, build(k) {
+    k.box(0.95, 0.45, 4.2, k.P, 0, 0.55, 0.1);
+    k.cyl(0.12, 0.42, 1.8, k.P, 0, 0.48, 3.1, Math.PI / 2);
+    k.box(2.0, 0.42, 1.7, k.P, 0, 0.5, -0.4);
+    k.box(0.7, 0.18, 1.1, 0x111111, 0, 0.82, 0.5);
+    k.ball(0.3, 0xffeb3b, 0, 1.02, 0.25);
+    k.box(0.5, 0.55, 1.0, k.P, 0, 1.0, -0.7);
+    k.box(2.7, 0.08, 0.7, k.dark, 0, 0.22, 3.7);
+    k.box(2.3, 0.1, 0.8, k.P, 0, 1.55, -2.35);
+    k.box(0.12, 0.7, 0.2, k.dark, 0, 1.15, -2.15);
+    for (const s of [-1, 1]) {
+      k.box(0.08, 0.75, 1.0, k.dark, s * 1.15, 1.25, -2.35);
+      k.box(0.06, 0.45, 0.7, k.dark, s * 1.35, 0.3, 3.65);
+    }
+    k.lamps(0.55, null, -1.96, 0.25, 0.25, 0.15);
+    for (const s of [-1, 1]) { k.wheel(s * 1.3, 2.1, 0.48, 0.5); k.wheel(s * 1.3, -1.5, 0.58, 0.7); }
+    Object.assign(k, { len: 6.4, wid: 3.2, lampY: 0.5, exhaust: [[0, 0.6, -2.6, 0.9]] });
+  } },
+  { name: 'Monster truck', emoji: '🛻', st: [3, 3, 2, 5], r: 2.3, m: 1.8, cam: 1.3, pitch: 0.75, horn: 'big', build(k) {
+    k.wheels4(1.75, 1.95, -1.95, 1.35, 1.0, 0xffc107);
+    k.box(2.2, 0.35, 4.6, k.dark, 0, 1.35, 0);
+    for (const x of [-0.95, 0.95]) for (const z of [-1.95, 1.95]) k.cyl(0.18, 0.18, 1.3, 0xffeb3b, x, 1.95, z);
+    k.box(3.1, 0.85, 5.0, k.P, 0, 2.55, 0);
+    k.box(3.14, 0.14, 5.04, 0xffffff, 0, 2.7, 0);
+    k.box(2.7, 1.05, 2.0, k.P, 0, 3.5, 0.3);
+    k.box(2.74, 0.6, 2.04, k.glass, 0, 3.45, 0.3);
+    for (let i = 0; i < 4; i++) k.box(0.32, 0.22, 0.22, k.basic(0xfff59d), -0.75 + i * 0.5, 4.14, 1.0);
+    k.lamps(2.6, 2.52, -2.52, 1.0);
+    Object.assign(k, { len: 5.2, wid: 4.5, exhaust: [[-0.7, 2.4, -3.3, 1.2], [0.7, 2.4, -3.3, 1.2]] });
+  } },
+  { name: 'Policie', emoji: '🚓', paint: 0xffffff, st: [4, 4, 3, 2], horn: 'siren', build(k) {
+    k.box(2.3, 0.6, 4.7, k.P, 0, 0.7, 0);
+    k.box(2.32, 0.16, 4.72, 0x0d47a1, 0, 0.5, 0);
+    k.box(1.9, 0.6, 2.2, k.glass, 0, 1.3, -0.25);
+    k.box(1.94, 0.1, 2.0, k.P, 0, 1.63, -0.25);
+    k.box(1.5, 0.12, 0.4, k.dark, 0, 1.74, -0.1);
+    k.beacon(-0.42, 1.9, -0.1, 0x2962ff, 0);
+    k.beacon(0.42, 1.9, -0.1, 0xff1744, Math.PI);
+    k.label('POLICIE', 2.4, 0.4, 1.16, 0.78, 0.2, '#ffffff', '#0d47a1');
+    k.box(1.6, 0.3, 0.15, k.dark, 0, 0.6, 2.42);
+    k.lamps(0.8, 2.36, -2.36);
+    k.wheels4(1.15, 1.5, -1.5, 0.5, 0.45);
+  } },
+  { name: 'Hasiči', emoji: '🚒', paint: 0xd32f2f, st: [3, 3, 2, 3], r: 2.1, m: 2.4, cam: 1.25, pitch: 0.7, horn: 'siren', build(k) {
+    k.box(2.6, 1.7, 2.0, k.P, 0, 1.75, 2.5);
+    k.box(2.64, 0.7, 2.04, k.glass, 0, 2.15, 2.5);
+    k.box(2.6, 1.9, 4.8, k.P, 0, 1.85, -1.1);
+    k.box(2.62, 0.22, 7.0, 0xffffff, 0, 1.2, 0);
+    k.label('HASIČI', 3.6, 0.7, 1.31, 2.15, -1.1, '#d32f2f', '#ffffff');
+    for (const s of [-1, 1]) k.box(0.1, 0.1, 6.2, 0xcfd8dc, s * 0.5, 3.0, -0.6);
+    for (let i = 0; i < 12; i++) k.box(1.0, 0.06, 0.08, 0xcfd8dc, 0, 3.0, -3.5 + i * 0.52);
+    k.beacon(-0.7, 2.75, 2.6, 0x2962ff, 0);
+    k.beacon(0.7, 2.75, 2.6, 0x2962ff, Math.PI);
+    k.lamps(1.2, 3.52, -3.52, 0.95);
+    for (const s of [-1, 1]) {
+      k.wheel(s * 1.2, 2.4, 0.6, 0.5);
+      k.wheel(s * 1.2, -1.4, 0.6, 0.5, false);
+      k.wheel(s * 1.2, -2.7, 0.6, 0.5, false);
+    }
+    Object.assign(k, { len: 7.0, wid: 2.7, exhaust: [[0.9, 0.7, -4.0, 1]] });
+  } },
+  { name: 'Sanitka', emoji: '🚑', paint: 0xffffff, st: [4, 3, 3, 2], r: 1.9, m: 1.5, cam: 1.15, horn: 'siren', build(k) {
+    k.box(2.4, 2.1, 4.4, k.P, 0, 1.65, -0.6);
+    k.box(2.3, 1.0, 1.4, k.P, 0, 1.1, 2.3);
+    k.box(2.3, 0.85, 0.1, k.glass, 0, 2.05, 1.62);
+    k.box(2.44, 0.6, 1.0, k.glass, 0, 2.15, 1.0);
+    k.box(2.42, 0.32, 4.42, 0xd32f2f, 0, 1.12, -0.6);
+    k.box(2.32, 0.32, 1.42, 0xd32f2f, 0, 1.12, 2.3);
+    k.label('SANITKA', 3.0, 0.55, 1.22, 1.85, -1.1, '#ffffff', '#d32f2f');
+    k.box(1.0, 0.05, 0.32, 0xd32f2f, 0, 2.72, -1.0);
+    k.box(0.32, 0.05, 1.0, 0xd32f2f, 0, 2.72, -1.0);
+    k.beacon(-0.8, 2.82, 1.3, 0x2962ff, 0);
+    k.beacon(0.8, 2.82, 1.3, 0x2962ff, Math.PI);
+    k.lamps(1.2, 3.02, -2.82, 0.85);
+    k.wheels4(1.15, 2.0, -1.8, 0.55, 0.45);
+    Object.assign(k, { len: 5.8, wid: 2.5 });
+  } },
+  { name: 'Taxi', emoji: '🚕', paint: 0xffc107, st: [3, 4, 4, 2], build(k) {
+    k.box(2.3, 0.6, 4.7, k.P, 0, 0.7, 0);
+    k.box(2.32, 0.12, 4.72, 0x111111, 0, 0.88, 0);
+    k.box(1.9, 0.6, 2.2, k.glass, 0, 1.3, -0.2);
+    k.box(1.94, 0.1, 2.0, k.P, 0, 1.63, -0.2);
+    const t = lambert(0xffffff, { map: textTex('TAXI', '#ffffff', '#111111', 256, 96, 70) });
+    const w = lambert(0xffffff);
+    k.box(1.0, 0.36, 0.4, [w, w, w, w, t, t], 0, 1.86, -0.2);
+    k.lamps(0.8, 2.36, -2.36);
+    k.wheels4(1.15, 1.5, -1.5, 0.5, 0.45);
+  } },
+  { name: 'Autobus', emoji: '🚌', paint: 0xe53935, st: [3, 3, 3, 2], r: 2.4, m: 3, cam: 1.35, pitch: 0.65, horn: 'big', build(k) {
+    k.box(2.7, 1.35, 7.5, k.P, 0, 1.33, 0);
+    k.box(2.72, 0.95, 7.52, k.glass, 0, 2.48, 0);
+    k.box(2.7, 0.35, 7.5, 0xfff8e1, 0, 3.12, 0);
+    for (let i = 0; i < 6; i++) k.box(2.76, 0.95, 0.14, k.P, 0, 2.48, -3.0 + i * 1.2);
+    k.sign('7  ZOO', 1.8, 0.3, 2.8, 3.77, '#111111', '#ffab00');
+    k.lamps(1.0, 3.76, -3.76, 1.0);
+    for (const s of [-1, 1]) { k.wheel(s * 1.2, 2.4, 0.62, 0.5); k.wheel(s * 1.2, -2.4, 0.62, 0.5, false); }
+    Object.assign(k, { len: 7.5, wid: 2.8, exhaust: [[0.9, 0.7, -4.5, 1]] });
+  } },
+  { name: 'Bugina', emoji: '🏜️', st: [3, 3, 3, 4], m: 0.9, build(k) {
+    const bar = 0x424242;
+    k.box(1.9, 0.3, 3.4, k.P, 0, 0.8, -0.1);
+    k.box(1.5, 0.45, 1.1, k.P, 0, 0.9, 1.8);
+    k.box(1.2, 0.6, 1.0, 0x333333, 0, 1.1, -1.4);
+    k.box(0.7, 0.7, 0.2, 0x222222, 0, 1.3, -0.6);
+    k.ball(0.32, 0xffffff, 0, 1.75, -0.25);
+    k.box(0.4, 0.15, 0.1, k.dark, 0, 1.78, 0.05);
+    for (const s of [-1, 1]) {
+      k.cyl(0.06, 0.06, 1.5, bar, s * 0.8, 1.7, 0.5, -0.35);
+      k.cyl(0.06, 0.06, 1.5, bar, s * 0.8, 1.7, -0.9, 0.2);
+      k.cyl(0.06, 0.06, 1.0, bar, s * 0.8, 2.42, -0.25, Math.PI / 2);
+    }
+    for (const z of [0.25, -0.75]) k.cyl(0.06, 0.06, 1.6, bar, 0, 2.42, z, 0, Math.PI / 2);
+    k.lamps(0.95, 2.36, null, 0.5, 0.3, 0.3);
+    for (const s of [-1, 1]) { k.wheel(s * 1.15, 1.6, 0.55, 0.5); k.wheel(s * 1.25, -1.3, 0.72, 0.75); }
+    Object.assign(k, { len: 4.4, wid: 3.2, exhaust: [[0.4, 1.2, -2.2, 0.8]] });
+  } },
+  { name: 'Kamion', emoji: '🚛', st: [4, 2, 2, 3], r: 2.3, m: 3, cam: 1.35, pitch: 0.6, horn: 'big', build(k) {
+    k.box(2.4, 0.4, 8.0, 0x333333, 0, 0.8, 0);
+    k.box(2.6, 2.3, 2.0, k.P, 0, 2.1, 3.0);
+    k.box(2.64, 0.8, 2.04, k.glass, 0, 2.55, 3.0);
+    k.box(2.2, 0.6, 0.12, 0xbdbdbd, 0, 1.35, 4.02);
+    k.box(2.7, 3.0, 5.6, 0xf5f5f5, 0, 2.5, -1.2);
+    k.box(2.72, 0.5, 5.62, k.P, 0, 3.4, -1.2);
+    for (const s of [-1, 1]) k.cyl(0.12, 0.12, 1.8, 0xbdbdbd, s * 1.15, 3.4, 1.85);
+    k.lamps(1.3, 4.04, -4.02, 0.9);
+    for (const s of [-1, 1]) {
+      k.wheel(s * 1.2, 3.0, 0.62, 0.5);
+      k.wheel(s * 1.2, -2.3, 0.62, 0.55, false);
+      k.wheel(s * 1.2, -3.4, 0.62, 0.55, false);
+    }
+    Object.assign(k, { len: 8.1, wid: 2.8, exhaust: [[-1.15, 4.3, 1.5, 0.8], [1.15, 4.3, 1.5, 0.8]] });
+  } },
+  { name: 'Traktor', emoji: '🚜', paint: 0x43a047, st: [2, 3, 3, 5], r: 1.9, m: 1.6, cam: 1.15, pitch: 0.55, build(k) {
+    k.box(1.6, 0.4, 3.6, 0x333333, 0, 0.9, 0.3);
+    k.box(1.1, 1.0, 2.4, k.P, 0, 1.45, 0.9);
+    k.box(1.0, 0.8, 0.06, 0x222222, 0, 1.4, 2.12);
+    k.box(1.7, 1.4, 1.5, k.glass, 0, 2.5, -0.95);
+    for (const x of [-0.85, 0.85]) for (const z of [-0.2, -1.7]) k.box(0.1, 1.7, 0.1, 0x222222, x, 2.5, z);
+    k.box(2.0, 0.15, 1.8, k.P, 0, 3.4, -0.95);
+    k.cyl(0.08, 0.08, 1.4, 0x222222, 0.35, 2.5, 1.7);
+    k.lamps(1.6, 2.13, -1.86, 0.4, 0.25, 0.2);
+    for (const s of [-1, 1]) {
+      k.wheel(s * 1.25, -0.95, 1.15, 0.8, false, 0xffc107);
+      k.wheel(s * 0.95, 1.65, 0.62, 0.45, true, 0xffc107);
+    }
+    Object.assign(k, { len: 4.4, wid: 3.3, exhaust: [[0.35, 3.3, 1.4, 0.6]] });
+  } },
+  { name: 'Prcek', emoji: '🚗', st: [2, 5, 5, 1], r: 1.35, m: 0.6, cam: 0.85, pitch: 1.3, horn: 'toot', build(k) {
+    k.box(1.8, 0.75, 3.0, k.P, 0, 0.78, 0);
+    k.box(1.62, 0.6, 1.7, k.glass, 0, 1.45, -0.2);
+    k.box(1.66, 0.1, 1.6, 0xffffff, 0, 1.78, -0.2);
+    for (const s of [-1, 1]) k.ball(0.17, k.basic(0xfff8e1), s * 0.55, 0.92, 1.47);
+    k.lamps(0.9, null, -1.51, 0.6, 0.3, 0.2);
+    k.wheels4(0.92, 1.05, -1.05, 0.42, 0.38);
+    Object.assign(k, { len: 3.0, wid: 2.0 });
+  } },
+  { name: 'Raketa', emoji: '🚀', st: [5, 5, 2, 1], m: 0.9, pitch: 1.4, horn: 'laser', build(k) {
+    k.cyl(0.8, 0.8, 3.8, k.P, 0, 1.1, -0.3, Math.PI / 2);
+    k.cyl(0.02, 0.8, 1.9, k.P, 0, 1.1, 2.55, Math.PI / 2);
+    k.cyl(0.82, 0.82, 0.3, 0xffffff, 0, 1.1, 0.9, Math.PI / 2);
+    k.ball(0.5, k.glass, 0, 1.75, 0.5, 1, 0.8, 1.7);
+    k.box(0.08, 1.0, 1.2, 0xffffff, 0, 2.2, -1.7);
+    for (const s of [-1, 1]) k.box(1.0, 0.08, 1.2, 0xffffff, s * 1.2, 0.9, -1.7);
+    k.cyl(0.55, 0.7, 0.5, 0x424242, 0, 1.1, -2.45, Math.PI / 2);
+    k.wheels4(1.05, 1.4, -1.3, 0.45, 0.4);
+    Object.assign(k, { len: 5.4, wid: 2.4, lampY: 1.1, exhaust: [[0, 1.1, -3.4, 1.8]] });
+  } },
+  { name: 'Džíp', emoji: '🚙', st: [3, 3, 3, 4], r: 1.85, m: 1.3, cam: 1.1, build(k) {
+    k.box(2.4, 1.0, 4.3, k.P, 0, 1.4, 0);
+    k.box(2.2, 1.0, 2.4, k.P, 0, 2.4, -0.55);
+    k.box(2.24, 0.6, 2.44, k.glass, 0, 2.35, -0.55);
+    k.box(2.3, 0.1, 2.3, 0x333333, 0, 2.95, -0.55);
+    for (let i = 0; i < 4; i++) k.box(0.3, 0.22, 0.2, k.basic(0xfff59d), -0.6 + i * 0.4, 3.1, 0.45);
+    k.box(2.0, 0.5, 0.3, 0x333333, 0, 1.0, 2.25);
+    k.cyl(0.55, 0.55, 0.35, 0x1d1d1d, 0, 1.6, -2.35, Math.PI / 2);
+    k.lamps(1.55, 2.16, -2.16, 0.85, 0.3, 0.3);
+    k.wheels4(1.25, 1.45, -1.45, 0.68, 0.55);
+    Object.assign(k, { len: 4.7, wid: 3.0 });
+  } },
+  { name: 'Zmrzlinář', emoji: '🍦', paint: 0xfce4ec, st: [3, 3, 4, 2], r: 1.9, m: 1.4, cam: 1.15, horn: 'jingle', build(k) {
+    k.box(2.4, 2.1, 4.0, k.P, 0, 1.75, -0.8);
+    k.box(2.3, 1.0, 1.5, k.P, 0, 1.2, 1.95);
+    k.box(2.3, 0.85, 0.1, k.glass, 0, 2.1, 1.22);
+    k.box(2.44, 0.6, 0.9, k.glass, 0, 2.15, 0.65);
+    k.box(2.42, 0.3, 4.02, 0xec407a, 0, 1.0, -0.8);
+    k.label('ZMRZLINA', 3.2, 0.55, 1.22, 1.95, -1.0, '#ec407a', '#ffffff');
+    k.cyl(0.5, 0.05, 1.3, 0xd7a86e, 0, 3.45, -0.9);
+    k.ball(0.55, 0xf48fb1, 0, 4.25, -0.9);
+    k.ball(0.45, 0x8d6e63, 0, 4.8, -0.9);
+    k.ball(0.15, 0xd50000, 0, 5.3, -0.9);
+    k.lamps(1.2, 2.72, -2.82, 0.85);
+    k.wheels4(1.15, 1.9, -1.9, 0.55, 0.45);
+    Object.assign(k, { len: 5.5, wid: 2.5 });
+  } },
+  { name: 'Dýňový kočár', emoji: '🎃', paint: 0xff7a00, st: [3, 4, 3, 3], r: 1.9, m: 1.2, cam: 1.1, horn: 'spooky', build(k) {
+    k.box(1.2, 0.2, 3.8, 0x3e2723, 0, 0.95, 0);
+    k.ball(1.6, k.P, 0, 1.95, 0, 1.15, 0.95, 1.25);
+    for (let i = 0; i < 8; i++) {
+      const a = i / 8 * TAU;
+      k.ball(1.0, i % 2 ? 0xf57c00 : 0xff8f00, Math.cos(a) * 0.85, 1.95, Math.sin(a) * 0.95, 0.75, 1.45, 0.75);
+    }
+    k.cyl(0.15, 0.25, 0.7, 0x558b2f, 0, 3.55, 0, 0.2);
+    const glow = k.basic(0xffea00);
+    for (const s of [-1, 1]) k.cyl(0.02, 0.28, 0.42, glow, s * 0.5, 2.3, 1.98, Math.PI / 2);
+    k.box(1.0, 0.22, 0.12, glow, 0, 1.5, 2.05);
+    for (const s of [-1, 1]) { k.wheel(s * 1.4, 1.5, 0.85, 0.2, true, 0x3e2723); k.wheel(s * 1.4, -1.5, 0.95, 0.2, false, 0x3e2723); }
+    Object.assign(k, { len: 4.4, wid: 3.2, lampY: 1.8 });
+  } },
+  { name: 'Dino-auto', emoji: '🦕', paint: 0x7cb342, st: [4, 3, 3, 3], r: 1.75, cam: 1.05, horn: 'roar', build(k) {
+    k.box(2.3, 0.8, 4.4, k.P, 0, 0.9, 0);
+    k.box(1.9, 0.55, 2.0, k.glass, 0, 1.55, -0.4);
+    k.box(1.94, 0.12, 1.8, k.P, 0, 1.88, -0.4);
+    for (let i = 0; i < 5; i++) k.cyl(0.02, 0.38, 0.75, 0xff7043, 0, 2.25, -1.2 + i * 0.4).scale.x = 0.3;
+    k.box(0.6, 1.0, 0.6, k.P, 0, 1.75, 1.7);
+    k.box(0.85, 0.6, 1.2, k.P, 0, 2.35, 2.0);
+    for (const s of [-1, 1]) {
+      k.ball(0.14, 0xffffff, s * 0.43, 2.5, 2.2);
+      k.ball(0.08, 0x111111, s * 0.5, 2.52, 2.25);
+      for (let i = 0; i < 3; i++) k.ball(0.25, 0x558b2f, s * 1.13, 0.95, -1.4 + i * 1.3, 0.3, 1, 1);
+    }
+    k.cyl(0.05, 0.45, 2.2, k.P, 0, 1.0, -3.3, -Math.PI / 2);
+    k.lamps(0.9, 2.21, -2.21);
+    k.wheels4(1.15, 1.5, -1.5, 0.55, 0.45);
+    Object.assign(k, { len: 5.0, wid: 2.4 });
+  } },
+];
+
+function carSpec(d) {
+  const [spd, acc, han, ter] = d.st;
+  return {
+    maxV: 47 + spd * 2.4, acc: 20 + acc * 2.6, steer: 1.75 + han * 0.13, grip: 7 + han * 0.8,
+    offV: 16 + ter * 4.5, offDrag: 1.7 - ter * 0.22, offGrip: 4 + ter * 0.8,
+    r: d.r ?? 1.7, m: d.m ?? 1, cam: d.cam ?? 1, pitch: d.pitch ?? 1,
+  };
+}
+
+function buildCar(idx, color, parent = scene) {
+  const def = CARS[idx];
+  const k = carKit(def.paint ?? color);
+  def.build(k);
+  const { g, body } = k;
+  // auta ve vlastních barvách mají praporek v barvě hráče
+  if (def.paint !== undefined) {
+    const top = new THREE.Box3().setFromObject(body).max.y;
+    const x = k.wid / 2 - 0.5, z = -k.len / 2 + 0.7;
+    k.cyl(0.03, 0.03, 1.6, 0x333333, x, top + 0.6, z);
+    k.box(0.04, 0.45, 0.7, lambert(color, { side: THREE.DoubleSide }), x, top + 1.15, z - 0.36);
   }
-  const front = [], wheels = [];
-  const wGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.45, 14);
-  for (const [x, z] of [[-1.15, 1.45], [1.15, 1.45], [-1.15, -1.45], [1.15, -1.45]]) {
-    const pivot = new THREE.Group();
-    pivot.position.set(x, 0.5, z);
-    g.add(pivot);
-    const w = mesh(wGeo, dark, 0, 0, 0, pivot);
-    w.rotation.z = Math.PI / 2;
-    wheels.push(w);
-    if (z > 0) front.push(pivot);
-  }
-  const sh = mesh(new THREE.PlaneGeometry(3.4, 6), new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false }), 0, 0.07, 0, g);
+  const sh = mesh(new THREE.PlaneGeometry(k.wid * 1.45, k.len * 1.3), new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false }), 0, 0.07, 0, g);
   sh.rotation.x = -Math.PI / 2;
   const flames = [];
   const fMat = new THREE.MeshBasicMaterial({ color: 0xff9100, transparent: true, opacity: 0.9 });
-  for (const s of [-1, 1]) {
-    const f = mesh(new THREE.ConeGeometry(0.28, 1.6, 8), fMat, s * 0.5, 0.6, -3.1, body);
+  for (const [x, y, z, s] of k.exhaust || [[-0.5, 0.6, -k.len / 2 - 0.8, 1], [0.5, 0.6, -k.len / 2 - 0.8, 1]]) {
+    const f = mesh(new THREE.ConeGeometry(0.28 * s, 1.6 * s, 8), fMat, x, y, z, body);
     f.rotation.x = -Math.PI / 2;
     f.visible = false;
     flames.push(f);
   }
   // světlomety (zapínají se na noční trati)
   const spot = new THREE.SpotLight(0xfff2cc, 350, 90, 0.55, 0.5, 1.2);
-  spot.position.set(0, 1.2, 2);
-  spot.target.position.set(0, 0, 20);
+  spot.position.set(0, k.lampY + 0.4, k.len / 2);
+  spot.target.position.set(0, 0, k.len / 2 + 18);
+  spot.visible = false;
   g.add(spot, spot.target);
-  scene.add(g);
-  return { group: g, body, front, wheels, flames, lights: [spot] };
+  g.userData.beacons = k.beacons;
+  parent.add(g);
+  return { group: g, body, front: k.front, wheels: k.wheels, flames, lights: [spot], beacons: k.beacons };
+}
+
+function blinkBeacons(list) {
+  for (const b of list) b.material.color.copy(b.userData.c).multiplyScalar(Math.sin(clock * 11 + b.userData.phase) > 0 ? 1 : 0.12);
+}
+
+// náhledy aut v menu – jeden malý renderer, obraz se kopíruje do karet hráčů
+const prevR = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+prevR.setPixelRatio(1);
+prevR.setSize(400, 230, false);
+const prevScene = new THREE.Scene();
+prevScene.add(new THREE.HemisphereLight(0xffffff, 0x445566, 1.5));
+{
+  const l = new THREE.DirectionalLight(0xffffff, 2.2);
+  l.position.set(5, 9, 7);
+  prevScene.add(l);
+  const disc = mesh(new THREE.CircleGeometry(1, 40), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.08 }), 0, 0, 0, prevScene);
+  disc.rotation.x = -Math.PI / 2;
+  prevScene.userData.disc = disc;
+}
+const prevCam = new THREE.PerspectiveCamera(30, 400 / 230, 0.1, 200);
+const prevCars = [null, null];
+
+function setCar(i, idx) {
+  const p = players[i] || { i };
+  p.carIdx = (idx + CARS.length) % CARS.length;
+  store.set('car' + i, p.carIdx);
+  if (p.car) disposeObj(p.car.group);
+  p.car = buildCar(p.carIdx, COLORS[i]);
+  p.car.lights.forEach(l => { l.visible = !!theme?.night; });
+  p.spec = carSpec(CARS[p.carIdx]);
+  if (p.x !== undefined) syncCar(p, 0);
+  if (prevCars[i]) disposeObj(prevCars[i]);
+  const g = buildCar(p.carIdx, COLORS[i], prevScene).group;
+  const box = new THREE.Box3().setFromObject(g);
+  g.userData.size = box.getSize(new THREE.Vector3());
+  prevCars[i] = g;
+  return p;
+}
+
+function drawPreviews() {
+  const disc = prevScene.userData.disc;
+  for (let i = 0; i < 2; i++) {
+    const g = prevCars[i];
+    if (!g) continue;
+    prevCars.forEach(o => { if (o) o.visible = o === g; });
+    g.rotation.y = clock * 0.6 + (i ? Math.PI : 0) + 0.6;
+    blinkBeacons(g.userData.beacons);
+    const s = g.userData.size, R = Math.max(s.x, s.z, s.y * 1.5);
+    disc.scale.setScalar(R * 0.62);
+    prevCam.position.set(0, s.y * 0.5 + R * 0.62, R * 1.9);
+    prevCam.lookAt(0, s.y * 0.38, 0);
+    prevR.render(prevScene, prevCam);
+    const c = $('prev' + i).getContext('2d');
+    c.clearRect(0, 0, 400, 230);
+    c.drawImage(prevR.domElement, 0, 0);
+  }
 }
 
 function makePlayer(i) {
-  return {
-    i, car: buildCar(COLORS[i]), cam: new THREE.PerspectiveCamera(60, 1, 0.5, 2500),
+  const p = {
+    i, cam: new THREE.PerspectiveCamera(60, 1, 0.5, 2500),
     hud: document.getElementById('hud' + i),
   };
+  players[i] = p;
+  return setCar(i, store.get('car' + i, 0));
 }
-const players = [makePlayer(0), makePlayer(1)];
+const players = [];
+makePlayer(0); makePlayer(1);
 
 function placeOnGrid(p) {
   const k = N - 14;
@@ -1146,11 +2181,12 @@ addEventListener('keydown', e => {
   if (e.repeat) return;
   initAudio();
   const map = {
-    Enter: 'confirm', Space: 'confirm', Escape: 'esc', KeyP: 'pause',
-    ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right',
-    ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down',
+    Enter: ['confirm'], Space: ['confirm'], Escape: ['esc'], KeyP: ['pause'],
+    KeyA: ['left', 0], KeyD: ['right', 0], KeyW: ['up', 0], KeyS: ['down', 0], KeyQ: ['horn', 0],
+    ArrowLeft: ['left', 1], ArrowRight: ['right', 1], ArrowUp: ['up', 1], ArrowDown: ['down', 1],
+    ShiftRight: ['horn', 1], ControlRight: ['horn', 1],
   };
-  if (map[e.code]) actions.push({ t: map[e.code] });
+  if (map[e.code]) actions.push({ t: map[e.code][0], p: map[e.code][1] });
   if (e.code === 'KeyR') actions.push({ t: 'reset', p: 0 });
   if (e.code === 'Period' || e.code === 'Slash' || e.code === 'Numpad0') actions.push({ t: 'reset', p: 1 });
   if (e.code === 'KeyF') toggleFS();
@@ -1204,6 +2240,9 @@ function pollPads() {
     if (edge(1) || edge(8)) actions.push({ t: 'back', p: i });
     if (edge(9)) actions.push({ t: 'start', p: i });
     if (edge(3)) actions.push({ t: 'reset', p: i });
+    if (edge(4)) actions.push({ t: 'lb', p: i });
+    if (edge(5)) actions.push({ t: 'rb', p: i });
+    if (edge(10) || edge(11)) actions.push({ t: 'horn', p: i });
     if (edge(14) || edge('L')) actions.push({ t: 'left', p: i });
     if (edge(15) || edge('R')) actions.push({ t: 'right', p: i });
     if (edge(12) || edge('U')) actions.push({ t: 'up', p: i });
@@ -1252,6 +2291,7 @@ function initAudio() {
     actx.master = actx.createGain();
     actx.master.gain.value = 0.5;
     actx.master.connect(actx.destination);
+    loadSamples();
     for (let i = 0; i < 2; i++) {
       const o = actx.createOscillator(), o2 = actx.createOscillator();
       o.type = 'sawtooth'; o2.type = 'square';
@@ -1272,20 +2312,234 @@ function beep(freq, dur, vol = 0.18, type = 'square') {
   o.connect(g); g.connect(actx.master);
   o.start(); o.stop(t + dur);
 }
-function roar() {
-  if (!actx || muted) return;
-  const t = actx.currentTime;
-  const o = actx.createOscillator(), o2 = actx.createOscillator(), f = actx.createBiquadFilter(), g = actx.createGain();
-  o.type = 'sawtooth'; o2.type = 'square';
-  o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(55, t + 1.3);
-  o2.frequency.setValueAtTime(97, t); o2.frequency.exponentialRampToValueAtTime(41, t + 1.3);
-  f.type = 'lowpass'; f.frequency.value = 500;
-  g.gain.setValueAtTime(0.001, t);
-  g.gain.exponentialRampToValueAtTime(0.35, t + 0.15);
-  g.gain.exponentialRampToValueAtTime(0.001, t + 1.4);
-  o.connect(f); o2.connect(f); f.connect(g); g.connect(actx.master);
-  o.start(); o2.start(); o.stop(t + 1.4); o2.stop(t + 1.4);
+// ---------- zvuky dinosaurů: vrčení přes zkreslení + šum přes „hrdelní“ filtry ----------
+let noiseBuf = null;
+const growlCurve = new Float32Array(512).map((_, i) => Math.tanh((i / 256 - 1) * 4));
+let dinoVoices = 0;
+
+// nahrávky (sounds/): skutečná zvířata, zpomalená/zrychlená – stejně se dělají zvuky dinosaurů ve filmech
+// T-Rex: „t rex calls“ (aligátor + lev + jelen), OpenGameArt, CC0; řev netvora, OpenGameArt, CC0;
+// bizon, jeřáb, orel, havran: Yellowstone National Park Sound Library, NPS, public domain
+// [soubor, min. rychlost, max. rychlost, hlasitost] – rychlost < 1 = hlubší a větší zvíře
+const SAMPLE_SET = {
+  rex: [['rex1', 0.85, 1], ['rex2', 0.85, 1], ['rex3', 0.72, 0.85]],
+  sauro: [['sauro1', 0.5, 0.6, 1.3], ['sauro2', 0.5, 0.6, 1.3], ['bison1', 0.45, 0.55, 1.1]],
+  tri: [['bison1', 0.8, 0.95, 0.9], ['bison2', 0.8, 0.95, 0.9], ['bison3', 0.8, 0.95, 0.9]],
+  steg: [['bison3', 0.95, 1.1, 0.8], ['rexhuff', 1.1, 1.3, 0.8]],
+  para: [['crane1', 0.42, 0.5, 0.8], ['crane2', 0.42, 0.5, 0.8]],
+  raptor: [['eagle1', 0.62, 0.72, 0.55], ['eagle2', 0.62, 0.72, 0.55], ['rexgrowl', 1.7, 1.9, 0.6]],
+  ptero: [['raven', 0.7, 0.85, 0.6]],
+};
+const samples = {};
+function loadSamples() {
+  const names = new Set(Object.values(SAMPLE_SET).flat().map(s => s[0]));
+  for (const n of names) {
+    fetch(`sounds/${n}.m4a`).then(r => r.arrayBuffer()).then(b => actx.decodeAudioData(b))
+      .then(buf => { samples[n] = buf; }).catch(() => { /* zůstane syntéza */ });
+  }
 }
+function dinoSound(kind, vol = 1) {
+  if (!actx || muted || vol <= 0.02 || dinoVoices >= 3) return;
+  const opts = (SAMPLE_SET[kind] || []).filter(o => samples[o[0]]);
+  if (!opts.length) return synthSound(kind, vol);
+  const [name, r0, r1, gain = 1] = opts[Math.floor(Math.random() * opts.length)];
+  const src = actx.createBufferSource(), g = actx.createGain();
+  src.buffer = samples[name];
+  src.playbackRate.value = rand(r0, r1);
+  g.gain.value = vol * gain * 0.8;
+  src.connect(g); g.connect(actx.master);
+  src.start();
+  dinoVoices++;
+  src.onended = () => { dinoVoices--; g.disconnect(); };
+}
+
+// záloha, než se nahrávky načtou (nebo když se nenačtou)
+function synthSound(kind, vol = 1) {
+  if (!actx || muted || vol <= 0.02 || dinoVoices >= 3) return;
+  if (!noiseBuf) {
+    noiseBuf = actx.createBuffer(1, actx.sampleRate * 2, actx.sampleRate);
+    const d = noiseBuf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  }
+  const t = actx.currentTime, srcs = [];
+  const out = actx.createGain();
+  out.gain.value = vol;
+  out.connect(actx.master);
+  const node = (type, props = {}) => {
+    const n = type === 'gain' ? actx.createGain() : type === 'shaper' ? actx.createWaveShaper() : actx.createBiquadFilter();
+    if (type !== 'gain' && type !== 'shaper') n.type = type;
+    if (type === 'shaper') n.curve = growlCurve;
+    if (props.f) n.frequency.value = props.f;
+    if (props.q) n.Q.value = props.q;
+    if (props.g !== undefined) n.gain.value = props.g;
+    return n;
+  };
+  const chain = (...ns) => { for (let i = 0; i < ns.length - 1; i++) ns[i].connect(ns[i + 1]); return ns[0]; };
+  // obálka hlasitosti: náběh a, plná síla, doznění rel
+  const env = (g, a, peak, dur, rel) => {
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(peak, t + a);
+    g.gain.setValueAtTime(peak, t + Math.max(a, dur - rel));
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  };
+  // průběh frekvence: [[čas, Hz], …]
+  const osc = (type, curve, dest) => {
+    const o = actx.createOscillator();
+    o.type = type;
+    o.frequency.setValueAtTime(curve[0][1], t);
+    for (const [tt, f] of curve.slice(1)) o.frequency.exponentialRampToValueAtTime(f, t + tt);
+    o.connect(dest);
+    srcs.push(o);
+    return o;
+  };
+  const noise = dest => { const s = actx.createBufferSource(); s.buffer = noiseBuf; s.loop = true; s.playbackRate.value = rand(0.8, 1.2); s.connect(dest); srcs.push(s); return s; };
+  const lfo = (rate, depth, param) => { const l = actx.createOscillator(), g = node('gain', { g: depth }); l.frequency.value = rate; chain(l, g); g.connect(param); srcs.push(l); };
+  const sweep = (param, curve) => { param.setValueAtTime(curve[0][1], t); for (const [tt, v] of curve.slice(1)) param.exponentialRampToValueAtTime(v, t + tt); };
+  const p = rand(0.9, 1.1);   // každý dinosaurus zní trochu jinak
+  let dur = 1;
+
+  if (kind === 'rex') {
+    // hluboký chraplavý řev: dvě pily přes zkreslení s „chrastěním“, dech přes dva formanty, sub-basové dunění
+    dur = 2.6;
+    const g = node('gain'); env(g, 0.3, 0.7, dur, 1.2); g.connect(out);
+    const lp = node('lowpass', { q: 0.7 }); sweep(lp.frequency, [[0, 700], [0.4, 1100], [dur, 300]]);
+    const pre = node('gain', { g: 1.6 });
+    chain(pre, node('shaper'), lp, g);
+    osc('sawtooth', [[0, 75 * p], [0.35, 105 * p], [dur, 52 * p]], pre);
+    osc('sawtooth', [[0, 77 * p], [0.35, 109 * p], [dur, 50 * p]], pre);
+    lfo(31, 1.2, pre.gain);
+    const ng = node('gain'); env(ng, 0.25, 0.9, dur, 1.3); ng.connect(out);
+    for (const [a, b, q] of [[500, 260, 3], [1250, 650, 4], [2400, 1300, 5]]) {
+      const bp = node('bandpass', { q }); sweep(bp.frequency, [[0, a * p], [0.4, a * 1.3 * p], [dur, b * p]]);
+      noise(bp); bp.connect(ng);
+    }
+    const sg = node('gain'); env(sg, 0.4, 0.55, dur, 1.2); sg.connect(out);
+    osc('sine', [[0, 48], [dur, 32]], sg);
+  } else if (kind === 'sauro') {
+    // obří sauropod: pomalé hluboké volání jako slon/velryba
+    dur = 3.4;
+    const g = node('gain'); env(g, 0.9, 0.8, dur, 1.4); g.connect(out);
+    const lp = node('lowpass', { f: 380, q: 2 });
+    lp.connect(g);
+    const o1 = osc('triangle', [[0, 52 * p], [1.3, 78 * p], [dur, 44 * p]], lp);
+    const h = node('gain', { g: 0.35 });
+    h.connect(lp);
+    osc('sawtooth', [[0, 104 * p], [1.3, 156 * p], [dur, 88 * p]], h);
+    lfo(4.5, 2.5, o1.frequency);
+    const ng = node('gain'); env(ng, 0.6, 0.25, dur, 1.5); ng.connect(out);
+    noise(chain(node('bandpass', { f: 220, q: 1.5 }), ng));
+  } else if (kind === 'tri') {
+    // triceratops: krátké bučení / bručení
+    dur = 1.4;
+    const g = node('gain'); env(g, 0.12, 0.7, dur, 0.6); g.connect(out);
+    const pre = node('gain', { g: 1.2 });
+    chain(pre, node('shaper'), node('lowpass', { f: 520, q: 1.5 }), g);
+    osc('sawtooth', [[0, 92 * p], [0.3, 118 * p], [dur, 78 * p]], pre);
+    lfo(13, 0.8, pre.gain);
+    const ng = node('gain'); env(ng, 0.08, 0.35, 0.6, 0.3); ng.connect(out);
+    noise(chain(node('bandpass', { f: 450, q: 2 }), ng));
+  } else if (kind === 'para') {
+    // parasaurolofus: trubka – rezonance v dutém hřebenu
+    dur = 2.2;
+    const g = node('gain'); env(g, 0.35, 0.55, dur, 0.8); g.connect(out);
+    const mix = node('gain', { g: 0.8 });
+    chain(mix, node('lowpass', { f: 1600 }), g);
+    const src = node('gain');
+    const o = osc('sawtooth', [[0, 98 * p], [0.5, 112 * p], [dur, 92 * p]], src);
+    lfo(4.2, 2, o.frequency);
+    for (const [f, q] of [[290, 5], [820, 7], [1400, 6]]) {
+      const bp = node('bandpass', { f: f * p, q });
+      src.connect(bp); bp.connect(mix);
+    }
+    src.connect(chain(node('lowpass', { f: 300 }), node('gain', { g: 0.4 }), g));
+  } else if (kind === 'steg') {
+    // stegosaurus: frknutí a zabručení
+    dur = 0.9;
+    const ng = node('gain'); env(ng, 0.03, 0.8, 0.45, 0.35); ng.connect(out);
+    noise(chain(node('bandpass', { f: 850 * p, q: 1.3 }), ng));
+    const g = node('gain'); env(g, 0.25, 0.45, dur, 0.4); g.connect(out);
+    osc('sawtooth', [[0, 85 * p], [dur, 65 * p]], chain(node('lowpass', { f: 320 }), g));
+  } else if (kind === 'raptor') {
+    // raptor: pronikavý skřek s trylkem
+    dur = 0.8;
+    const g = node('gain'); env(g, 0.05, 0.4, dur, 0.4); g.connect(out);
+    const pre = node('gain', { g: 1 });
+    chain(pre, node('bandpass', { f: 1700 * p, q: 2.5 }), g);
+    osc('sawtooth', [[0, 900 * p], [0.15, 1750 * p], [dur, 800 * p]], pre);
+    lfo(38, 0.9, pre.gain);
+    const ng = node('gain'); env(ng, 0.04, 0.25, dur, 0.5); ng.connect(out);
+    noise(chain(node('bandpass', { f: 3200, q: 2 }), ng));
+  } else if (kind === 'ptero') {
+    // pteranodon: krákavé zaskřehotání
+    dur = 0.5;
+    const g = node('gain'); env(g, 0.03, 0.35, dur, 0.25); g.connect(out);
+    const pre = node('gain', { g: 1 });
+    chain(pre, node('shaper'), node('bandpass', { f: 1100 * p, q: 3 }), g);
+    osc('square', [[0, 560 * p], [dur, 360 * p]], pre);
+    lfo(21, 0.9, pre.gain);
+  }
+  for (const s of srcs) { s.start(t); s.stop(t + dur + 0.05); }
+  dinoVoices++;
+  setTimeout(() => { dinoVoices--; out.disconnect(); }, (dur + 0.1) * 1000);
+}
+// zavolá, jen když je nějaké auto dost blízko; hlasitost podle vzdálenosti
+function dinoCall(kind, x, z, maxD = 150) {
+  if (state !== 'race') return false;
+  const near = nearestCar(x, z);
+  if (near.dist > maxD) return false;
+  dinoSound(kind, Math.pow(1 - near.dist / maxD, 1.2));
+  return true;
+}
+function roar(vol = 1) { dinoSound('rex', vol); }
+
+// klakson / siréna podle auta
+function horn(p) {
+  initAudio();
+  if (!actx || muted || p.hornT > 0) return;
+  const kind = CARS[p.carIdx].horn || 'honk';
+  if (kind === 'roar') { p.hornT = 2.6; roar(); return; }
+  const dur = { siren: 1.6, jingle: 1.5, spooky: 1.2, laser: 0.6 }[kind] || 0.45;
+  p.hornT = dur;
+  const t = actx.currentTime, g = actx.createGain();
+  let vol = 0.07;
+  g.connect(actx.master);
+  const osc = (type, f) => {
+    const o = actx.createOscillator();
+    o.type = type; o.frequency.value = f;
+    o.connect(g); o.start(t); o.stop(t + dur);
+    return o;
+  };
+  if (kind === 'siren') {
+    const o = osc('triangle', 650);
+    for (let i = 0; i < 2; i++) {
+      o.frequency.linearRampToValueAtTime(1250, t + 0.4 + i * 0.8);
+      o.frequency.linearRampToValueAtTime(650, t + 0.8 + i * 0.8);
+    }
+    g.gain.setValueAtTime(vol = 0.13, t);
+  } else if (kind === 'jingle') {
+    const o = osc('square', 784);
+    [784, 659, 784, 880, 784, 659].forEach((f, i) => o.frequency.setValueAtTime(f, t + i * 0.25));
+    g.gain.setValueAtTime(vol = 0.06, t);
+  } else if (kind === 'spooky') {
+    const o = osc('sine', 420);
+    o.frequency.exponentialRampToValueAtTime(160, t + dur);
+    const lfo = actx.createOscillator(), lg = actx.createGain();
+    lfo.frequency.value = 7; lg.gain.value = 40;
+    lfo.connect(lg); lg.connect(o.frequency); lfo.start(t); lfo.stop(t + dur);
+    g.gain.setValueAtTime(vol = 0.2, t);
+  } else if (kind === 'laser') {
+    const o = osc('sawtooth', 1800);
+    o.frequency.exponentialRampToValueAtTime(120, t + dur);
+    g.gain.setValueAtTime(vol = 0.08, t);
+  } else {
+    const f = kind === 'big' ? 140 : kind === 'toot' ? 560 : 330;
+    osc('square', f); osc('square', f * 1.26);
+    g.gain.setValueAtTime(vol = 0.07, t);
+  }
+  g.gain.setValueAtTime(vol, t + dur - 0.08);
+  g.gain.linearRampToValueAtTime(0.0001, t + dur);
+}
+
 function updateAudio() {
   if (!actx) return;
   const t = actx.currentTime;
@@ -1294,8 +2548,9 @@ function updateAudio() {
     if (!e) return;
     const live = !muted && (state === 'race' || state === 'countdown');
     const sp = Math.abs(p.fwd);
-    e.o.frequency.setTargetAtTime(45 + sp * 2.4 + (p.boost > 0 ? 30 : 0), t, 0.05);
-    e.o2.frequency.setTargetAtTime(22 + sp * 1.2, t, 0.05);
+    const k = p.spec.pitch;
+    e.o.frequency.setTargetAtTime((45 + sp * 2.4 + (p.boost > 0 ? 30 : 0)) * k, t, 0.05);
+    e.o2.frequency.setTargetAtTime((22 + sp * 1.2) * k, t, 0.05);
     e.g.gain.setTargetAtTime(live ? 0.035 + 0.035 * p.inp.thr : 0, t, 0.08);
   });
 }
@@ -1306,28 +2561,28 @@ function physics(p, dt) {
   let fx = Math.sin(p.h), fz = Math.cos(p.h), rx = -fz, rz = fx;
   let fwd = p.vx * fx + p.vz * fz, lat = p.vx * rx + p.vz * rz;
   const off = Math.abs(p.lateral) > ROAD_W + CURB_W;
-  const boosting = p.boost > 0;
-  const maxV = boosting ? 80 : (off ? 24 : 54);
+  const boosting = p.boost > 0, S = p.spec;
+  const maxV = boosting ? 80 : (off ? S.offV : S.maxV);
 
   if (boosting) fwd += 40 * dt;
-  if (inp.thr > 0 && fwd < maxV) fwd += inp.thr * 27 * dt;
+  if (inp.thr > 0 && fwd < maxV) fwd += inp.thr * S.acc * dt;
   if (inp.brk > 0) {
     if (fwd > 1) fwd -= inp.brk * 50 * dt;
     else if (fwd > -14) fwd -= inp.brk * 16 * dt;
   }
-  fwd -= fwd * (off ? 1.4 : 0.22) * dt;
+  fwd -= fwd * (off ? S.offDrag : 0.22) * dt;
   if (fwd > maxV) fwd -= (fwd - maxV) * 1.5 * dt;
   if (!inp.thr && !inp.brk) fwd -= Math.sign(fwd) * Math.min(Math.abs(fwd), 3 * dt);
 
   const vx = fx * fwd + rx * lat, vz = fz * fwd + rz * lat;
 
   const sp = Math.abs(fwd);
-  const steer = inp.st * 2.1 * Math.min(1, sp / 6) * (1 - 0.45 * Math.min(1, sp / 75));
+  const steer = inp.st * S.steer * Math.min(1, sp / 6) * (1 - 0.45 * Math.min(1, sp / 75));
   p.h -= steer * (fwd < -0.5 ? -1 : 1) * dt;
 
   fx = Math.sin(p.h); fz = Math.cos(p.h); rx = -fz; rz = fx;
   fwd = vx * fx + vz * fz;
-  lat = (vx * rx + vz * rz) * Math.exp(-(off ? 6 : 9) * dt);
+  lat = (vx * rx + vz * rz) * Math.exp(-(off ? S.offGrip : S.grip) * dt);
   p.vx = fx * fwd + rx * lat;
   p.vz = fz * fwd + rz * lat;
   p.fwd = fwd;
@@ -1348,7 +2603,7 @@ function trackConstraint(p) {
   const P = pts[p.idx], R = right[p.idx];
   const lat = (p.x - P.x) * R.x + (p.z - P.z) * R.z;
   p.lateral = lat;
-  const lim = WALL - CAR_R;
+  const lim = WALL - p.spec.r;
   if (Math.abs(lat) > lim) {
     const s = Math.sign(lat), push = Math.abs(lat) - lim;
     p.x -= R.x * s * push; p.z -= R.z * s * push;
@@ -1364,14 +2619,16 @@ function trackConstraint(p) {
 }
 
 function carCollision(a, b) {
-  const dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz), minD = 3.6;
+  const dx = b.x - a.x, dz = b.z - a.z, d = Math.hypot(dx, dz), minD = a.spec.r + b.spec.r;
   if (d >= minD || d < 0.001) return;
-  const nx = dx / d, nz = dz / d, ov = (minD - d) / 2;
-  a.x -= nx * ov; a.z -= nz * ov; b.x += nx * ov; b.z += nz * ov;
+  // těžší auto se odstrčí méně
+  const ia = 1 / a.spec.m, ib = 1 / b.spec.m, sum = ia + ib;
+  const nx = dx / d, nz = dz / d, ov = minD - d;
+  a.x -= nx * ov * ia / sum; a.z -= nz * ov * ia / sum; b.x += nx * ov * ib / sum; b.z += nz * ov * ib / sum;
   const rv = (b.vx - a.vx) * nx + (b.vz - a.vz) * nz;
   if (rv < 0) {
-    const j = -1.6 * rv / 2;
-    a.vx -= j * nx; a.vz -= j * nz; b.vx += j * nx; b.vz += j * nz;
+    const j = -1.6 * rv / sum;
+    a.vx -= j * ia * nx; a.vz -= j * ia * nz; b.vx += j * ib * nx; b.vz += j * ib * nz;
     if (-rv > 5) { rumble(a, 0.6); rumble(b, 0.6); beep(70, 0.15, 0.2, 'sawtooth'); }
   }
 }
@@ -1429,6 +2686,7 @@ function syncCar(p, dt) {
   c.body.rotation.x = -Math.min(0.04, Math.max(-0.04, p.inp.thr * 0.02 - p.inp.brk * 0.03));
   const fl = p.boost > 0;
   for (const f of c.flames) { f.visible = fl; f.scale.set(1, 0.7 + Math.random() * 0.6, 1); }
+  blinkBeacons(c.beacons);
 }
 
 function updateCamera(p, dt) {
@@ -1437,8 +2695,9 @@ function updateCamera(p, dt) {
   p.camH += d * (1 - Math.exp(-5 * dt));
   const fx = Math.sin(p.camH), fz = Math.cos(p.camH);
   const cam = p.cam;
-  cam.position.set(p.x - fx * 11, 4.6, p.z - fz * 11);
-  cam.lookAt(p.x + fx * 8, 1.4, p.z + fz * 8);
+  const cs = p.spec.cam;
+  cam.position.set(p.x - fx * 11 * cs, 4.6 * cs, p.z - fz * 11 * cs);
+  cam.lookAt(p.x + fx * 8, 1.4 * cs, p.z + fz * 8);
   const targetFov = 58 + Math.min(80, Math.abs(p.fwd)) * 0.22 + (p.boost > 0 ? 6 : 0);
   cam.fov += (targetFov - cam.fov) * Math.min(1, dt * 4);
 }
@@ -1543,8 +2802,14 @@ $('trackPick').innerHTML = TRACKS.map((t, i) =>
   `<div class="tcard" data-i="${i}"><span class="em">${t.emoji}</span>${t.name}</div>`).join('');
 $('trackPick').addEventListener('click', e => {
   const c = e.target.closest('.tcard');
-  if (c) { menuRow = 0; selectTrack(+c.dataset.i); }
+  if (c) { menuRow = 1; selectTrack(+c.dataset.i); }
 });
+document.querySelectorAll('.arr').forEach(el => el.addEventListener('click', () => {
+  const i = +el.dataset.p;
+  menuRow = 0;
+  setCar(i, players[i].carIdx + +el.dataset.d);
+}));
+const STAT_NAMES = ['Rychlost', 'Zrychlení', 'Ovládání', 'Terén'];
 
 function selectTrack(i) {
   if (i === trackIdx) return;
@@ -1556,8 +2821,18 @@ function selectTrack(i) {
 let devCache = ['', ''];
 function updateMenu() {
   setText($('lapsVal'), String(LAPS()));
-  $('rowTrack').classList.toggle('focus', menuRow === 0);
-  $('rowLaps').classList.toggle('focus', menuRow === 1);
+  $('rowCars').classList.toggle('focus', menuRow === 0);
+  $('rowTrack').classList.toggle('focus', menuRow === 1);
+  $('rowLaps').classList.toggle('focus', menuRow === 2);
+  for (const p of players) {
+    const d = CARS[p.carIdx];
+    const html = `${d.emoji} ${d.name} <small>${p.carIdx + 1}/${CARS.length}</small>`;
+    if (devCache[3 + p.i] !== html) {
+      devCache[3 + p.i] = html;
+      $('carName' + p.i).innerHTML = html;
+      $('stats' + p.i).innerHTML = d.st.map((v, k) => `<span>${STAT_NAMES[k]}</span><i>${'<b></b>'.repeat(v)}${'<u></u>'.repeat(5 - v)}</i>`).join('');
+    }
+  }
   document.querySelectorAll('.tcard').forEach((c, i) => c.classList.toggle('sel', i === trackIdx));
   for (let i = 0; i < 2; i++) {
     const g = pads[i];
@@ -1587,6 +2862,7 @@ function setState(s) {
 let lastBeep = 4;
 function startRace() {
   players.forEach(placeOnGrid);
+  players.forEach(p => setText(p.hud.querySelector('.name'), `${NAMES[p.i]} ${CARS[p.carIdx].emoji}`));
   raceTime = 0; firstFinishAt = -1;
   cdT = 3;
   lastBeep = 4;
@@ -1603,7 +2879,7 @@ function showResults() {
   $('resTrack').textContent = `${theme.emoji} ${theme.name} · ${LAPS()} ${LAPS() === 1 ? 'kolo' : LAPS() < 5 ? 'kola' : 'kol'}`;
   $('resTable').innerHTML = order.map((p, k) => {
     const best = p.lapTimes.length ? fmt(Math.min(...p.lapTimes)) : '–';
-    return `<tr class="p${p.i + 1}"><td>${k + 1}. ${NAMES[p.i]}</td><td>${p.finished ? fmt(p.finishTime) : 'nedojel'}</td><td>nejlepší kolo ${best}</td></tr>`;
+    return `<tr class="p${p.i + 1}"><td>${k + 1}. ${NAMES[p.i]} ${CARS[p.carIdx].emoji}</td><td>${p.finished ? fmt(p.finishTime) : 'nedojel'}</td><td>nejlepší kolo ${best}</td></tr>`;
   }).join('');
   resultsAt = performance.now();
   setState('results');
@@ -1616,17 +2892,22 @@ function handleActions() {
     switch (state) {
       case 'menu': {
         if (a.t === 'confirm' || a.t === 'start') startRace();
-        if (a.t === 'up') menuRow = 0;
-        if (a.t === 'down') menuRow = 1;
+        if (a.t === 'up') menuRow = Math.max(0, menuRow - 1);
+        if (a.t === 'down') menuRow = Math.min(2, menuRow + 1);
+        const who = players[a.p ?? 0];
+        if (a.t === 'lb' || a.t === 'rb') setCar(who.i, who.carIdx + (a.t === 'rb' ? 1 : -1));
+        if (a.t === 'horn') horn(who);
         const dir = a.t === 'left' ? -1 : a.t === 'right' ? 1 : 0;
-        if (dir && menuRow === 0) selectTrack((trackIdx + dir + TRACKS.length) % TRACKS.length);
-        if (dir && menuRow === 1) { lapIdx = (lapIdx + dir + LAP_CHOICES.length) % LAP_CHOICES.length; store.set('laps', lapIdx); }
+        if (dir && menuRow === 0) setCar(who.i, who.carIdx + dir);
+        if (dir && menuRow === 1) selectTrack((trackIdx + dir + TRACKS.length) % TRACKS.length);
+        if (dir && menuRow === 2) { lapIdx = (lapIdx + dir + LAP_CHOICES.length) % LAP_CHOICES.length; store.set('laps', lapIdx); }
         break;
       }
       case 'countdown':
       case 'race':
         if (a.t === 'start' || a.t === 'esc' || a.t === 'pause') { pausedFrom = state; setState('paused'); }
         if (a.t === 'reset' && state === 'race') resetToTrack(players[a.p ?? 0]);
+        if (a.t === 'horn' || a.t === 'lb' || a.t === 'rb') horn(players[a.p ?? 0]);
         break;
       case 'paused':
         if (a.t === 'confirm' || a.t === 'start' || a.t === 'pause') setState(pausedFrom);
@@ -1684,7 +2965,8 @@ function frame(now) {
     if (allDone || (firstFinishAt >= 0 && raceTime - firstFinishAt > 12)) showResults();
   }
 
-  if (state === 'menu') updateMenu();
+  for (const p of players) p.hornT = Math.max(0, (p.hornT || 0) - dt);
+  if (state === 'menu') { updateMenu(); drawPreviews(); }
   minimap.style.display = state === 'menu' ? 'none' : '';
   if (state !== 'paused') {
     clock += dt;
@@ -1714,7 +2996,7 @@ function frame(now) {
 requestAnimationFrame(frame);
 
 // pro ladění tratí z konzole
-window.__turbo = { TRACKS, get pts() { return pts; }, buildTrack, players };
+window.__turbo = { TRACKS, CARS, setCar, dinoSound, get pts() { return pts; }, get world() { return world; }, buildTrack, players };
 </script>
 </body>
 </html>
